@@ -1,4 +1,4 @@
-### SeeAndChat를 다시 작성할 예정
+### Plan to rewrite SeeAndChat 
 * Backend
    * Node.js (HTTP Server)
    * Express.js (Web framework)
