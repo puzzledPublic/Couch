@@ -86,3 +86,4 @@ $RECYCLE.BIN/
 
 #config files
 config/dbConfig.json
+config/jwtConfig.json

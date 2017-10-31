@@ -1,0 +1,7 @@
+{
+    "secret" : "",
+    "signOption" : {
+        "issuer" : "couch"
+     },
+    "decodeOption" : ""
+}
