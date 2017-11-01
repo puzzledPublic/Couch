@@ -17,22 +17,33 @@
       <li><a href="http://vue-loader.vuejs.org/" target="_blank">vue-loader</a></li>
       <li><a href="https://github.com/vuejs/awesome-vue" target="_blank">awesome-vue</a></li>
     </ul>
-  </div>
+    <button id="show-modal" @click="showModal = true">Show Modal</button>
+    <test v-if="showModal" @close="showModal = false"></test>
+  </div> 
 </template>
 
 <script>
+import test from '@/components/test'
 export default {
   name: 'HelloWorld',
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App'
+      msg: 'Welcome to Your Vue.js App',
+      showModal: false
     }
+  },
+  components : {
+    'test' : test
   }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.hello {
+  padding: 20px;
+  text-align: center;
+}
 h1, h2 {
   font-weight: normal;
 }
