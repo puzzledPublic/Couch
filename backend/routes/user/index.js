@@ -10,4 +10,5 @@ router.post('/create', user.createValidator, user.create);
 
 router.post('/login/local', user.loginLocalVaildator, user.loginLocal);
 
+
 module.exports = router;

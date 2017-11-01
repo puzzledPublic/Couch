@@ -9,4 +9,6 @@ router.get('/', function(req, res, next) {
 
 router.use('/user', require('./user'));
 
+router.use('/broadcast', require('./broadcast'));
+
 module.exports = router;

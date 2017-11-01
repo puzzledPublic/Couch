@@ -3,7 +3,6 @@ const {createToken, decodeToken} = require('../token');
 
 module.exports = doAsync( async (req, res, next) => {
     const token = req.cookies['access_token'];
-
     if(!token){
         return next();
     }

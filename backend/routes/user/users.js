@@ -27,12 +27,18 @@ module.exports.create = doAsync( async (req, res, next) => {
     
   //DB 추가
   const user = await models.User.createUser(userParam);
-
+               await models.Broadcast.createBroadcast(userParam.username);
   //토큰 생성
   const token = await user.createToken();
 
   res.cookie('access_token', token, {maxAge: 6 * 60 * 60 * 100, httpOnly: true});
-  res.send({msg: user.username+ ' is created'});
+  res.send({
+    msg: user.username+ ' is created', 
+    user: {
+      id: user.id,
+      username: user.username,
+     }
+  });
   
 });
 
@@ -69,7 +75,12 @@ module.exports.loginLocal = doAsync( async (req, res, next) => {
   const token = await user.createToken();
   
   res.cookie('access_token', token, {maxAge: 6 * 60 * 60 * 100, httpOnly: true});
-  res.send({msg : 'welcome ' + user.username});
+  res.send({msg : 'welcome ' + user.username, 
+    user: {
+      id: user.id,
+      username: user.username
+    }
+  });
 });
 
 module.exports.loginLocalVaildator = [

@@ -2,16 +2,14 @@ const Hash = require('../lib/hash');
 const JWToken = require('../lib/token');
 
 module.exports = (sequelize, DataTypes) => {
-    let User = sequelize.define("User", {
-        username: { type : DataTypes.STRING, unique: true },
+    let User = sequelize.define('User', {
+        username: { type: DataTypes.STRING, unique: true },
         password: DataTypes.STRING,
-        email: { type : DataTypes.STRING, unique : true },
+        email: { type: DataTypes.STRING, unique : true },
         facebookId: DataTypes.STRING,
         facebookToken: DataTypes.STRING,
         googleId: DataTypes.STRING,
         googleToken: DataTypes.STRING,
-        hasroom: { type : DataTypes.BOOLEAN, defaultValue: false },
-        roomname: DataTypes.STRING
     });
 
     User.createUser = async (user) => {
@@ -21,8 +19,7 @@ module.exports = (sequelize, DataTypes) => {
         return await User.create({
             username: user.username,
             password: user.password,
-            email: user.email,
-            roomname: user.username
+            email: user.email
         }); 
     }
 
