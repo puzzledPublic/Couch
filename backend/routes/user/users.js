@@ -1,6 +1,6 @@
 const models = require('../../models');
 const doAsync = require('../../lib/doAsync');
-const {header, body, validationResult} = require('express-validator/check');
+const {body, validationResult} = require('express-validator/check');
 const {matchedData} = require('express-validator/filter');
 const Op = require('sequelize').Op;
 

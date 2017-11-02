@@ -22,3 +22,5 @@ module.exports.intToType = (num) => {
 module.exports.createStreamURL = (streamkey) => {
     return broadcastConfig['url'] + streamkey + '.m3u8';
 };
+
+module.exports.countsOfType = type.length;

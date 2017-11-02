@@ -19,5 +19,15 @@ module.exports = (sequelize, DataType) => {
         });
     }
 
+    Broadcast.updateInfo = async (info) => {
+        await Broadcast.update({
+            show: info.show, 
+            roomname: info.roomname, 
+            type: info.type},
+            {
+                where: {username: info.username}
+            });
+    }
+
     return Broadcast;
 }
