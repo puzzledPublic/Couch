@@ -7,6 +7,7 @@ router.get('/', function(req, res, next) {
   res.send({ title: 'default page' });
 });
 
+
 router.use('/user', require('./user'));
 
 router.use('/broadcast', require('./broadcast'));

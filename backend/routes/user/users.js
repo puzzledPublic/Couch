@@ -31,7 +31,7 @@ module.exports.create = doAsync( async (req, res, next) => {
   //토큰 생성
   const token = await user.createToken();
 
-  res.cookie('access_token', token, {maxAge: 6 * 60 * 60 * 100, httpOnly: true});
+  res.cookie('access_token', token, {maxAge: 30 * 1000, httpOnly: true});
   res.send({
     msg: user.username+ ' is created', 
     user: {
@@ -74,7 +74,7 @@ module.exports.loginLocal = doAsync( async (req, res, next) => {
   //토큰 생성
   const token = await user.createToken();
   
-  res.cookie('access_token', token, {maxAge: 6 * 60 * 60 * 100, httpOnly: true});
+  res.cookie('access_token', token, {maxAge: 30 * 1000, httpOnly: true});
   res.send({msg : 'welcome ' + user.username, 
     user: {
       id: user.id,

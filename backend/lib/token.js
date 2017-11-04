@@ -3,6 +3,7 @@ const {secret, signOption} = require('../config/jwtConfig');
 
 function createToken(payload, options){
     signOption.subject = options.subject;
+    signOption.expiresIn = options.expiresIn;
     return new Promise((resolve, reject) => {
         jwt.sign(payload, secret, signOption, (err, token) => {
             if(err){
@@ -13,9 +14,9 @@ function createToken(payload, options){
     });
 }
 
-function decodeToken(token, options){
+function decodeToken(token){
     return new Promise((resolve, reject) => {
-        jwt.verify(token, secret, options, (err, decoded) => {
+        jwt.verify(token, secret, (err, decoded) => {
             if(err){
                 reject(err);
             }

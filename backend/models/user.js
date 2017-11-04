@@ -37,7 +37,7 @@ module.exports = (sequelize, DataTypes) => {
                 id,
                 username
             }
-        }, {subject: 'user'});
+        }, {subject: 'user', expiresIn: '30s'});
     }
 
     return User;
