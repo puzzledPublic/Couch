@@ -1,32 +1,44 @@
 <template>
 <div>
     <nav v-bind:class="active" v-on:click.prevent>
-        <a href="#" class="home" v-on:click="makeActive('home')">Home</a>
-        <a href="#" class="projects" v-on:click="makeActive('projects')">방송 목록</a>
-        <a href="#" class="services" v-on:click="makeActive('services')">Services</a>
-        <a href="#" class="contact" v-on:click="makeActive('contact')">Contact</a>
-        <a href="" class="login" @click="showModal = true">Login</a>
-        <login-modal v-if="showModal" @close="showModal = false"></login-modal>
+        <a href="#" class="home" v-on:click="makeActive('home')">Couch</a>
+        <input type="text" class="search" placeholder="search..">
+        <a href="#" class="login" v-if="!isLogined" @click="showModal = true" >Login</a>
+        <a href="#" class="logined" v-if="isLogined">{{username}} 님</a> 
+        <login-modal v-if="showModal" @close="showModal = false" v-on:logined="loginToUser"></login-modal>
     </nav>
 </div>
 </template>
 
 <script>
-import loginModal from '@/components/login/loginModal';
+import loginModal from '@/components/login/LoginModal';
 
 export default {
     data() {
         return{
             active: 'home',
-            showModal: false
+            showModal: false,
+            isLogined: false,
+            username: '',
         }
     },
-
+    created() {
+        const user = window.localStorage.getItem('user');
+        if(user){
+            this.username = JSON.parse(user).username;
+            this.isLogined = true;
+        }
+    }
+    ,
     // Functions we will be using.
     methods: {
         makeActive: function(item){
             // When a model is changed, the view will be automatically updated.
             this.active = item;
+        },
+        loginToUser() {
+            this.username = JSON.parse(window.localStorage.getItem('user')).username;
+            this.isLogined = true;
         }
     },
 
@@ -65,7 +77,7 @@ nav{
 
 nav a{
     display:inline-block;
-    padding: 18px 30px;
+    padding: 16px 70px;
     color:#fff !important;
     font-weight:bold;
     font-size:16px;
@@ -90,10 +102,11 @@ nav a:last-child{
 nav.home .home,
 nav.projects .projects,
 nav.services .services,
-nav.contact .contact{
+nav.contact .contact,
+nav.login .login{
     background-color:#e35885;
 }
-.login {
+.login, .logined {
     float: right;
 }
 p{
@@ -110,5 +123,12 @@ p b{
     border-radius:2px;
     text-transform:uppercase;
     font-size:18px;
+}
+.search {
+    padding-left:3px;
+    box-sizing: border-box;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
 }
 </style>

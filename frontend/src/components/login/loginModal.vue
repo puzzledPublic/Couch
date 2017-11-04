@@ -13,8 +13,8 @@
 
           <div class="modal-body">
             <div name="body" v-if="!register">
-              <input v-model="email" type="email" placeholder="이메일.."></input>
-              <input v-model="password" type="password" placeholder="비밀번호.."></input>
+              <input v-model="email" type="email" placeholder="이메일.." :value="email"></input>
+              <input v-model="password" type="password" placeholder="비밀번호.." :value="password"></input>
             </div>
             <div name="body" v-if="register">
               <input v-model="email" id="email" type="email" placeholder="이메일.."></input>
@@ -47,7 +47,7 @@
 <script>
 import axios from 'axios';
 export default {
-  name: 'loginModal',
+  name: 'LoginModal',
   data() {
     return {
       register: false,
@@ -62,32 +62,12 @@ export default {
       console.log(this.email +' '+this.username+' '+this.password);
     },
     request() {
-      if(this.register) {
-        if(this.password !== this.passwordCheck && this.password.length){
-          alert('비밀번호를 확인해주세요.(6자 이상)');
-          return;
-        }
-        axios.post('http://whowant.ml:3000/user/create',{
-          email: this.email,
-          username: this.username,
-          password: this.password
-        }).then((response) => {
-          console.log(response);
-        }).catch((reason) => {
-          console.log(reason);
-        })
+      if(this.register){
+        this.$store.dispatch('createUserAction',{email:this.email, username: this.username, password: this.password});
       }
       else{
-        axios.post('http://whowant.ml:3000/user/login/local',{
-          email: this.email,
-          password: this.password
-        }).then((response) => {
-          console.log(response);
-        }).catch((reason) => {
-          console.log(reason);
-        })
+        this.$store.dispatch('localLoginAction', {email:this.email, password: this.password});
       }
-      
     }
 
   }
