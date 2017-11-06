@@ -31,7 +31,7 @@ module.exports.create = doAsync( async (req, res, next) => {
   //토큰 생성
   const token = await user.createToken();
 
-  res.cookie('access_token', token, {maxAge: 30 * 1000, httpOnly: true});
+  res.cookie('access_token', token, {maxAge: 60 * 1000, httpOnly: true});
   res.send({
     msg: user.username+ ' is created', 
     user: {
@@ -43,7 +43,7 @@ module.exports.create = doAsync( async (req, res, next) => {
 });
 
 module.exports.createValidator = [
-  body('username').isLength({min:4, max:12}).isAlphanumeric(),
+  body('username').isLength({min:4, max:12}),
   body('password').isLength({min:6, max:30}),
   body('email').isEmail()
 ]
@@ -74,7 +74,7 @@ module.exports.loginLocal = doAsync( async (req, res, next) => {
   //토큰 생성
   const token = await user.createToken();
   
-  res.cookie('access_token', token, {maxAge: 30 * 1000, httpOnly: true});
+  res.cookie('access_token', token, {maxAge: 60 * 1000, httpOnly: true});
   res.send({msg : 'welcome ' + user.username, 
     user: {
       id: user.id,
@@ -87,3 +87,17 @@ module.exports.loginLocalVaildator = [
   body('email').isEmail(),
   body('password').isLength({min:6, max:30})
 ]
+
+module.exports.logout = (req, res, next) => {
+  res.cookie('access_token', null, {maxAge: 0, httpOnly: true});
+  res.status(204).send({msg: 'successfully logouted'});
+}
+
+module.exports.check = (req, res, next) => {
+  const user = req.user;
+  console.log(req.cookies);
+  if(!user) {
+    return res.status(401).send({msg: 'fail'});
+  }
+  return res.send({msg: 'ok', user: user});
+}

@@ -10,8 +10,8 @@ module.exports = doAsync( async (req, res, next) => {
     const decoded = await decodeToken(token);
     const {user} = decoded;
     
-    if(Date.now() / 1000 - decoded.iat > 15 * 1000) {   
-        const refreshToken = await createToken({user}, {subject : 'user', expiresIn: '30s'});
+    if(Date.now() - decoded.iat * 1000 > 30 * 1000) {  //30초 이상 지난 경우 
+        const refreshToken = await createToken({user}, {subject : 'user', expiresIn: '60s'});
         res.cookie('access_token', refreshToken, {maxAge: 30 * 1000, httpOnly: true});
     }
 
