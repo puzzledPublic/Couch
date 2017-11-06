@@ -59,14 +59,32 @@ export default {
   },
   methods: {
     close() {
-      console.log(this.email +' '+this.username+' '+this.password);
+      this.$emit('close');
     },
-    request() {
+    async request() {
       if(this.register){
-        this.$store.dispatch('createUserAction',{email:this.email, username: this.username, password: this.password});
+        await this.$store.dispatch('createUserAction',{email:this.email, username: this.username, password: this.password});
+        if(this.checkResult()){
+          alert('회원가입 완료');
+          this.password = this.passwordCheck= '';
+          this.register = false;
+        }
       }
       else{
-        this.$store.dispatch('localLoginAction', {email:this.email, password: this.password});
+        await this.$store.dispatch('localLoginAction', {email:this.email, password: this.password});
+        if(this.checkResult()){
+          this.$emit('logined');
+          this.$emit('close');
+        }
+      }
+    },
+    checkResult() {
+      if(this.$store.state.auth.error.status){
+        alert(this.$store.state.auth.error.msg);
+        this.$store.commit('resetError');
+        return false;
+      }else{
+        return true;
       }
     }
 

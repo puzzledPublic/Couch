@@ -1,40 +1,50 @@
 <template>
     <div class="content">
         <ul class="sidebar">
-            <li><div @click="getType(0)">전체</div></li>
-            <li><div @click="getType(1)">movie</div></li>
-            <li><div @click="getType(2)">animation</div></li>
-            <li><div @click="getType(3)">entertain</div></li>
-            <li><div @click="getType(4)">music</div></li>
-            <li><div @click="getType(5)">talk</div></li>
-            <li><div @click="getType(6)">game</div></li>
-            <li><div @click="getType(7)">goout</div></li>   
+            <li><div @click="setType(0)">전체</div></li>
+            <li><div @click="setType(1)">movie</div></li>
+            <li><div @click="setType(2)">animation</div></li>
+            <li><div @click="setType(3)">entertain</div></li>
+            <li><div @click="setType(4)">music</div></li>
+            <li><div @click="setType(5)">talk</div></li>
+            <li><div @click="setType(6)">game</div></li>
+            <li><div @click="setType(7)">goout</div></li>   
         </ul>
-        <Broadcast-List :broadcastType="type" :brlist="list"></Broadcast-List>
+        <Broadcast-List :broadcastType="type" :broadcastList="broadcastList"></Broadcast-List>
     </div>  
 </template>
 
 <script>
 import mainBroadcastList from '@/components/main/BroadcastList';
 import axios from 'axios';
+import {mapGetters} from 'vuex';
+
 export default {
     name: 'MainContent',
     data() {
         return {
             type: 0,
-            list: '',
         }
     },
     components: {
         'Broadcast-List': mainBroadcastList
     },
+    computed: {
+        broadcastList() {
+            return this.$store.state.broadcast.broadcastList;
+        }
+    },
     created() {
         this.$store.dispatch('getBroadcastListAction', 0);
-    }
-    ,
+        
+    },
     methods: {
-        getType(typeNum) {
+        setType(typeNum) {
+            this.requestList(typeNum);
             this.type = typeNum;
+        },
+        requestList(typeNum) {
+            this.$store.dispatch('getBroadcastListAction', typeNum);
         }
     }
 };

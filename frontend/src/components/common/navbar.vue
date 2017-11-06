@@ -4,7 +4,14 @@
         <a href="#" class="home" v-on:click="makeActive('home')">Couch</a>
         <input type="text" class="search" placeholder="search..">
         <a href="#" class="login" v-if="!isLogined" @click="showModal = true" >Login</a>
-        <a href="#" class="logined" v-if="isLogined">{{username}} 님</a> 
+        <div class="logined" v-if="isLogined">
+            <span>{{username}} 님</span>
+            <div class="dropdown-content">
+            <a href="#"></a>
+            <a href="#" class="broadcastConfig" @click="testAction">방송설정</a>
+            <a href="#" class="logout" @click="logoutAction">로그아웃</a>
+            </div>
+        </div> 
         <login-modal v-if="showModal" @close="showModal = false" v-on:logined="loginToUser"></login-modal>
     </nav>
 </div>
@@ -12,21 +19,25 @@
 
 <script>
 import loginModal from '@/components/login/LoginModal';
-
+import { mapMutations, mapActions} from 'vuex';
 export default {
     data() {
         return{
             active: 'home',
             showModal: false,
-            isLogined: false,
             username: '',
         }
     },
     created() {
-        const user = window.localStorage.getItem('user');
+        const user = window.localStorage.getItem('COUCH_USER');
         if(user){
             this.username = JSON.parse(user).username;
-            this.isLogined = true;
+            this.setLoginFlag(true);
+        }
+    },
+    computed: {
+        isLogined() {
+            return this.$store.state.auth.isLogined;
         }
     }
     ,
@@ -36,9 +47,19 @@ export default {
             // When a model is changed, the view will be automatically updated.
             this.active = item;
         },
+        ...mapMutations({
+            setLoginFlag: 'setLoginFlag' 
+        }),
+        ...mapActions({
+            logoutAction: 'logoutAction',
+            setBroadcastConfigAction: 'setBroadcastConfigAction'
+        }),
         loginToUser() {
-            this.username = JSON.parse(window.localStorage.getItem('user')).username;
-            this.isLogined = true;
+            this.username = JSON.parse(window.localStorage.getItem('COUCH_USER')).username;
+            this.setLoginFlag(true);
+        },
+        testAction(){
+            this.setBroadcastConfigAction({username: this.username, show: true, roomname: 'hello!', typeNum: 2});
         }
     },
 
@@ -130,5 +151,32 @@ p b{
     border: 2px solid #ccc;
     border-radius: 4px;
     font-size: 16px;
+}
+.logined {
+    display:inline-block;
+    padding: 16px 70px;
+    color:#fff;
+    font-weight:bold;
+    font-size:16px;
+    text-decoration:none !important;
+    line-height:1;
+    text-transform: uppercase;
+    background-color:transparent;
+}
+.dropdown-content {
+    display: none;
+    position: absolute;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+.dropdown-content a {
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    text-align: left;
+}
+.logined:hover .dropdown-content {
+    display: block;
 }
 </style>

@@ -6,6 +6,7 @@ import couchMain from '@/components/CouchMain'
 Vue.use(Router)
 
 export default new Router({
+  mode: 'history',
   routes: [
     {
       path: '/',

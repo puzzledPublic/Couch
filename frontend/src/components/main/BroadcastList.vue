@@ -15,24 +15,20 @@
               </a>
           </div>
       </div>
+      <div class="emptyList" v-if="broadcastList.length == 0">
+          방송 중인 목록이 없습니다.
+      </div>
   </div>
 </template>
 
 <script>
 import axios from 'axios';
+
 export default {
     name: 'BroadcastList',
-    props: ['broadcastType', 'brlist'],
+    props: ['broadcastType','broadcastList'],
     data() {
         return {
-            broadcastList : [
-                {username: 'tester',roomname: 'room1',type: 0},
-                {username: 'tester2',roomname: 'room2',type: 1},
-                {username: 'tester3',roomname: 'room3',type: 2},
-                {username: 'tester4',roomname: 'room4',type: 3},
-                {username: 'tester5',roomname: 'room5',type: 4},
-                {username: 'tester6',roomname: 'room6',type: 5}
-            ],
             
         }
     },
@@ -85,6 +81,9 @@ div a {
 }
 .roomlist{
     margin-left: 25%;
+}
+.emptyList {
+    padding: 230px 320px;
 }
 @media only screen and (max-width: 700px){
     .roomwapper {

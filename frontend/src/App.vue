@@ -13,6 +13,9 @@ export default {
   name: 'app',
   components: {
     'navbar': navbar,
+  },
+  created() {
+    this.$store.dispatch('loginCheckAction');
   }
 }
 </script>

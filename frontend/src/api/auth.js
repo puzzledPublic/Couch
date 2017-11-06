@@ -5,7 +5,7 @@ export const localLogin = doAsync(({email, password}) => {
     return axios.post('http://whowant.ml:3000/user/login/local',{
         email, 
         password
-    });
+    },{withCredentials: true});
 });
 
 export const createUser = doAsync(({email, username, password}) => {
@@ -13,6 +13,13 @@ export const createUser = doAsync(({email, username, password}) => {
         email,
         username,
         password
-    });
+    },{withCredentials: true});
 });
 
+export const logout = doAsync(() => {
+    return axios.get('http://whowant.ml:3000/user/logout',{withCredentials: true});
+})
+
+export const loginCheck = doAsync(() => {
+    return axios.get('http://whowant.ml:3000/user/check',{withCredentials: true});
+})

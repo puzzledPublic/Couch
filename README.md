@@ -6,5 +6,6 @@
    * Sequelize.js (ORM)
 * Frontend
    * Vue.js
+   * Vuex.js
    * Vue-router.js
    * ESLint.js
