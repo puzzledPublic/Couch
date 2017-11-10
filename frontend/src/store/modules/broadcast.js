@@ -13,11 +13,10 @@ const actions = {
         const result = await broadcast.getBroadcastList(broadcastType);
         commit('setBroadcastList', result.data.list);
     },
-    async setBroadcastConfigAction({commit, rootState}, config) {
+    async setBroadcastConfigAction({commit, dispatch}, config) {
         const result = await broadcast.setBroadcastConfig(config);
         if(result.status !== 200) {
-            rootState.dispatch('loginCheckAction');
-            //로그인모달띄우기
+            await dispatch('loginCheckAction');
         }
     }
 }

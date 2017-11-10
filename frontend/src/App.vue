@@ -1,8 +1,8 @@
 <template>
-  <div id="app">
-    <navbar></navbar>
+  <div id="app" class="container is-fluid">
+      <navbar></navbar>
     <!--<img src="./assets/logo.png">-->
-    <router-view/>
+      <router-view/>
   </div>
 </template>
 
@@ -21,14 +21,17 @@ export default {
 </script>
 
 <style>
-body{
+
+html, body{
   background-color: #ddd;
+  height: 100%;
 }
+/*
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
   overflow: auto;
-}
+}*/
 </style>

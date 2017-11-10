@@ -1,18 +1,48 @@
 <template>
 <div>
-    <nav v-bind:class="active" v-on:click.prevent>
-        <a href="#" class="home" v-on:click="makeActive('home')">Couch</a>
-        <input type="text" class="search" placeholder="search..">
-        <a href="#" class="login" v-if="!isLogined" @click="showModal = true" >Login</a>
-        <div class="logined" v-if="isLogined">
-            <span>{{username}} 님</span>
-            <div class="dropdown-content">
-            <a href="#"></a>
-            <a href="#" class="broadcastConfig" @click="testAction">방송설정</a>
-            <a href="#" class="logout" @click="logoutAction">로그아웃</a>
+    <nav class="navbar" role="navigation" aria-label="main navigation" v-bind:class="active" v-on:click.prevent>
+        <div class="home navbar-brand">
+            <router-link to="/" class="navbar-item"> 
+                <img src="../../assets/COUCH-logo.png" width="112" height="28">
+            </router-link>
+            <button class="button navbar-burger" data-target="navMenu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+        <div class="navbar-menu" id="navMenu">
+            <div class="navbar-start">
+                <div class="navbar-item">
+                    <div class="field has-addons">
+                        <p class="control">
+                            <input type="text" class="search input" placeholder="search..">
+                        </p>
+                        <p class="control">
+                            <button class="button">
+                                Search
+                            </button>
+                        </p>
+                    </div>
+                </div>
             </div>
-        </div> 
-        <login-modal v-if="showModal" @close="showModal = false" v-on:logined="loginToUser"></login-modal>
+            <div class="navbar-end">
+                <div class="navbar-item">
+                    <p class="control">
+                        <button class="login button is-primary" v-if="!isLogined" @click="showModal = 'is-active'" >Sign Up/ Sign In</button>   
+                    </p>     
+                    <div class="logined navbar-item has-dropdown is-hoverable" v-if="isLogined">
+                        <span class="navbar-link">{{username}} 님</span>
+                        <div class="dropdown-content navbar-dropdown is-boxed is-right">
+                            <a href="#" class="navbar-item"></a>
+                            <a href="#" class="broadcastConfig navbar-item" @click="testAction">방송설정</a>
+                            <a href="#" class="logout navbar-item" @click="logoutAction">로그아웃</a>
+                        </div>
+                    </div>
+                </div> 
+            </div>
+        </div>
+        <login-modal :activeModal="showModal" @close="showModal = ''" v-on:logined="loginToUser"></login-modal>
     </nav>
 </div>
 </template>
@@ -24,7 +54,7 @@ export default {
     data() {
         return{
             active: 'home',
-            showModal: false,
+            showModal: '',
             username: '',
         }
     },
@@ -35,18 +65,16 @@ export default {
             this.setLoginFlag(true);
         }
     },
+    mounted() {
+        this.initiateNavBurger();
+    },
     computed: {
         isLogined() {
             return this.$store.state.auth.isLogined;
         }
-    }
-    ,
+    },
     // Functions we will be using.
     methods: {
-        makeActive: function(item){
-            // When a model is changed, the view will be automatically updated.
-            this.active = item;
-        },
         ...mapMutations({
             setLoginFlag: 'setLoginFlag' 
         }),
@@ -58,8 +86,15 @@ export default {
             this.username = JSON.parse(window.localStorage.getItem('COUCH_USER')).username;
             this.setLoginFlag(true);
         },
-        testAction(){
+        testAction() {
             this.setBroadcastConfigAction({username: this.username, show: true, roomname: 'hello!', typeNum: 2});
+        },
+        initiateNavBurger() {
+            let navbarBuger = document.getElementsByClassName('navbar-burger')[0];
+            navbarBuger.addEventListener('click',() => {
+                navbarBuger.classList.toggle('is-active');
+                document.getElementById('navMenu').classList.toggle('is-active');
+            });
         }
     },
 
@@ -70,7 +105,7 @@ export default {
 </script>
 
 <style scoped>
-
+/*
 a, a:visited {
     outline:none;
     color:#389dc1;
@@ -83,10 +118,6 @@ a:hover{
 section, footer, header, aside, nav{
     display: block;
 }
-
-/*-------------------------
-    The menu
---------------------------*/
 
 nav{
     display:inline-block;
@@ -179,4 +210,5 @@ p b{
 .logined:hover .dropdown-content {
     display: block;
 }
+*/
 </style>
