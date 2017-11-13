@@ -1,7 +1,9 @@
 <template>
-    <div class="videoPlayer">
-        <video :id="videoId" class="video-js">
-        </video>
+    <div class="column is-9">
+        <div class="videoPlayer">
+            <video :id="videoId" class="video-js">
+            </video>
+        </div>
     </div>
 </template>
 
@@ -20,7 +22,7 @@ export default {
     },
     mounted() {
         if(!this.player) {
-            this.initialize();
+            //this.initialize();
         }
     },
     methods: {
@@ -45,8 +47,10 @@ export default {
 </script>
 
 <style scoped>
-.videoPlayer {
-
+.video-js {
+    position: relative;
+    width: 100%;
+    height: 475px;
 }
 </style>
 

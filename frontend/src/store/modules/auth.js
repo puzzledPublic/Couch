@@ -13,7 +13,7 @@ const state = {
 }
 
 const getters = {
-    
+    username: (state) => { return state.userInfo.username; },
 }
 
 const actions = {
@@ -21,6 +21,7 @@ const actions = {
         const result = await auth.localLogin(userInfo);
         if(result.status === 200) {
             commit('setUserInfo', result.data.user);
+            commit('setLoginFlag', true);
             window.localStorage.setItem('COUCH_USER', JSON.stringify(result.data.user));
         }else{
             commit('setError', '잘못된 정보입니다.');

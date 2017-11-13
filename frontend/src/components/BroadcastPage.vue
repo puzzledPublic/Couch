@@ -1,7 +1,7 @@
 <template>
-    <div class="broadcastPage">
+    <div class="broadcastPage columns">
         <broadcast-player :username="$route.params.username"></broadcast-player>
-        <chat-box></chat-box>
+        <chat-box :roomname="$route.params.username"></chat-box>
     </div>
 </template>
 
@@ -22,6 +22,5 @@ export default {
 .broadcastPage {
     margin-top: 20px;
     padding: 0;
-    float: left;
 }
 </style>
