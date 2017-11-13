@@ -95,7 +95,6 @@ module.exports.logout = (req, res, next) => {
 
 module.exports.check = (req, res, next) => {
   const user = req.user;
-  console.log(req.cookies);
   if(!user) {
     return res.status(401).send({msg: 'fail'});
   }
