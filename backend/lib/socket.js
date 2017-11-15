@@ -12,27 +12,34 @@ module.exports = (server) => {
             const userInfo = {socketId: client.id, username: username};
             if(roomList[roomname] === undefined) {
                 roomList[roomname] = new Chat();
-                roomList[roomname].addUser(userInfo);
             }
-            else{
-                roomList[roomname].addUser(userInfo);
-            }
+            roomList[roomname].addUser(userInfo);    
             client.join(roomname);
         });
         
         client.on('sendMessage', ({msg}) => {
-            const keys = Object.keys(client.rooms);
-            io.to(keys[1]).emit('receiveMessage', {
+            const [socketId, roomname] = Object.keys(client.rooms);
+            io.to(roomname).emit('receiveMessage', {
                 msg: msg,
-                username: roomList[keys[1]].getUsername(keys[0])
+                username: roomList[roomname].getUsername(socketId)
             });
-        })
+        });
+
+        client.on('changeUsername', ({username}) => {
+            const [socketId, roomname] = Object.keys(client.rooms);
+            const userInfo = {socketId: socketId, username: username};
+            if(roomList[roomname] === undefined) {
+                return;
+            }
+            roomList[roomname].removeUser(socketId);
+            roomList[roomname].addUser(userInfo);
+        });
 
         client.on('disconnect', () => {
             for(const item in roomList) {
                 if(roomList[item].removeUser(client.id)){
                     if(roomList[item].getUserCount() === 0){
-                        roomList[item] = undefined;
+                        delete roomList[item];
                     }
                     break;
                 }
