@@ -36,7 +36,7 @@
                         <div class="dropdown-content navbar-dropdown is-boxed is-right">
                             <a href="#" class="navbar-item"></a>
                             <a href="#" class="broadcastConfig navbar-item" @click="testAction">방송설정</a>
-                            <a href="#" class="logout navbar-item" @click="logoutAction">로그아웃</a>
+                            <a href="#" class="logout navbar-item" @click="logout">로그아웃</a>
                         </div>
                     </div>
                 </div> 
@@ -95,6 +95,10 @@ export default {
                 navbarBuger.classList.toggle('is-active');
                 document.getElementById('navMenu').classList.toggle('is-active');
             });
+        },
+        logout() {
+            this.logoutAction();
+            this.$eventBus.$emit('logout');
         }
     },
 

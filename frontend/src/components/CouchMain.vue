@@ -36,17 +36,7 @@
                 </div>
             </div>
         </div>
-        <!--
-        <ul class="sidebar">
-            <li><div @click="setType(0)">전체</div></li>
-            <li><div @click="setType(1)">영화</div></li>
-            <li><div @click="setType(2)">애니메이션</div></li>
-            <li><div @click="setType(3)">엔터테이먼트</div></li>
-            <li><div @click="setType(4)">음악</div></li>
-            <li><div @click="setType(5)">토크</div></li>
-            <li><div @click="setType(6)">게임</div></li>
-            <li><div @click="setType(7)">야외방송</div></li>   
-        </ul>-->
+        
         <div class="column">
             <div></div>
             <Broadcast-List :broadcastType="type" :broadcastList="broadcastList"></Broadcast-List>
@@ -125,44 +115,5 @@ export default {
         padding: 0 41%;
     }
 }
-/* Style the content */
-/*
-.content {
-    margin-top: 20px;
-    padding: 0px;
-    overflow: auto;
-}
-ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    width: 15.5%;
-    background-color: #f1f1f1;
-    position: fixed;
-    height: 100%;
-    overflow: auto;
-}
 
-li div {
-    display: block;
-    color: #000;
-    padding: 8px 16px;
-    text-decoration: none;
-}
-
-li div.active {
-    background-color: #4CAF50;
-    color: white;
-}
-
-li div:hover:not(.active) {
-    background-color: #555;
-    color: white;
-}
-
-@media only screen and (max-width: 500px){
-    .sidebar {
-        display: none;
-    }
-}*/
 </style>

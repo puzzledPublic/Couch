@@ -9,7 +9,7 @@ const state = {
         id: null,
         username: null
     },
-    isLogined: false
+    isLogined: false,
 }
 
 const getters = {

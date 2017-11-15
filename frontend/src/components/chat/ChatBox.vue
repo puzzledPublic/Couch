@@ -9,35 +9,43 @@
               <li><a>차단</a></li>
             </ul>
           </div>
-          <div class="chatlist">
-            <div class="chat-left is-size-7">
-              <p>Hello. How are you my name is kim hyeong min live in korea and nobody cares me</p>
-              <span>Hello</span>
-              <span class="time-left">16:56</span>
+          <div class="chatlist" >
+            <div v-for="item in chatMsgList" :key="item.id" class="is-size-7" :class="'chat-'+ checkPosition(item.username)" >
+              <p>{{item.msg}}</p>
+              <span>{{item.username}}</span>
+              <span class="time-left">time here</span>
             </div>
-            <div class="chat-right is-size-7">
-              <p>Hello. How are you my name is kim hyeong min live in korea and nobody cares me</p>
-              <span class="time-left">17:00</span>
-            </div>
-            
           </div>
           <div class="field has-addons">
             <div class="control is-expanded">
-              <input v-model="chatMsg" class="input" type="text" placeholder="입력하세요..">
-            </div>
-            <div class="control">
-              <a class="button is-info" @click="sendMessage">
-                Submit
-              </a>
+              <input v-model="chatMsg" class="input" type="text" placeholder="입력하세요.." @keyup.enter="sendMessage" v-if="isLogined">
+              <div class="dropdown is-up" :class="{'is-active': showDropdown}" v-if="!isLogined" @click="showDropdown = !showDropdown">
+                <div class="dropdown-trigger">
+                  <button class="button guestButton" aria-haspopup="true" aria-controls="dropdown-menu">
+                    <span> 입력하세요.. </span>
+                  </button>
+                </div>
+                  <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                    <div class="dropdown-content">
+                      <a class="dropdown-item">로그인이 필요합니다.</a>
+                      <div class="dropdown-item">
+                        <input class="input" type="text" placeholder="임시 접속 닉네임..">
+                        <a>확인</a>
+                      </div>
+                    </div>
+                  </div>
+              </div>
             </div>
           </div>
       </aside>
     </div>
+    
   </div>
 </template>
 
 <script>
 import io from 'socket.io-client'
+import {mapMutations} from 'vuex'
 
 export default {
   name: 'ChatBox',
@@ -47,46 +55,78 @@ export default {
       chatMsg: '',
       socket: null,
       joinChatRoomInfo: {roomname: this.roomname, username: null},
+      showDropdown: false,
+    }
+  },
+  computed: {
+    chatMsgList() {
+      return this.$store.state.chat.chatMsgList;
+    },
+    isLogined() {
+      return this.$store.state.auth.isLogined;
     }
   },
   mounted() {
     this.initializeSocket();
     this.joinChatRoom();
+    this.$eventBus.$on('login', this.changeUsername);
   },
   beforeDestroy() {
     this.disconnectSocket();
   },
   methods: {
+    ...mapMutations([
+      'addMsg',
+      'setUserList',
+      'addBan',
+      'removeBan',
+      'setGuestname',
+    ]),
     initializeSocket() {
       if(!this.socket){
         this.socket = io('http://whowant.ml:3000');
-        this.socket.on('receiveMessage', ({msg, username}) => {
-          console.log(msg);
-          console.log(username);
+        this.socket.on('receiveMessage', (chatMsg) => {
+          this.addMsg(chatMsg);
         });
       }
     },
     joinChatRoom() {
-      if(!this.isLogined()){
+      if(!this.isLogined) {
         this.joinChatRoomInfo.username = 'guest';
       }else {
-        this.joinChatRoomInfo.username = this.$store.getters.username;
+        const username = JSON.parse(window.localStorage.getItem('COUCH_USER')).username;
+        this.joinChatRoomInfo.username = username;
       }
       this.socket.emit('joinChatRoom', this.joinChatRoomInfo);
     },
     sendMessage() {
-      if(this.chatMsg === ''){
+      if(this.chatMsg === '') {
         return;
-      }else{
+      }else {
         this.socket.emit('sendMessage', {msg: this.chatMsg});
         this.chatMsg = '';
       }
     },
     disconnectSocket() {
-      this.socket.disconnect();
+      if(this.socket){
+        this.socket.disconnect();
+        this.socket = null;
+      }
     },
-    isLogined() {
-      return this.$store.state.auth.isLogined;
+    checkPosition(username) {
+      const userInfo = window.localStorage.getItem('COUCH_USER');
+      if(userInfo) {
+        return username === JSON.parse(userInfo).username ? 'right' : 'left';
+      }
+      return 'left';
+    },
+    changeUsername() {
+      const userInfo = window.localStorage.getItem('COUCH_USER');
+      let username;
+      if(userInfo) {
+        username = JSON.parse(userInfo).username;
+      }
+      this.socket.emit('changeUsername', {username: username});
     }
   }
 }
@@ -126,5 +166,8 @@ export default {
 }
 .tabs {
   margin-bottom: 0px;
+}
+.dropdown, .dropdown-trigger, .guestButton, .dropdown-menu {
+  width: 100%;
 }
 </style>

@@ -6,6 +6,9 @@ import router from './router'
 import store from './store'
 import bulma from 'bulma/css/bulma.css'
 
+//Global EventBus
+Vue.prototype.$eventBus = new Vue();
+
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */

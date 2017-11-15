@@ -6,6 +6,7 @@ import Vuex from 'vuex';
 
 import auth from './modules/auth';
 import broadcast from './modules/broadcast';
+import chat from './modules/chat';
 
 Vue.use(Vuex);
 
@@ -14,6 +15,7 @@ export default new Vuex.Store({
     //getters,
     modules: {
         auth,
-        broadcast
+        broadcast,
+        chat
     }
 })
