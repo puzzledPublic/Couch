@@ -10,6 +10,7 @@ const state = {
         username: null
     },
     isLogined: false,
+    loginModal: '',
 }
 
 const getters = {
@@ -66,6 +67,9 @@ const mutations = {
     },
     setLoginFlag(state, flag) {
         state.isLogined = flag;
+    },
+    setLoginModal(state, flag) {
+        state.loginModal = flag;
     }
 }
 

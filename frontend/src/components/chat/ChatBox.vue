@@ -13,13 +13,13 @@
             <div v-for="item in chatMsgList" :key="item.id" class="is-size-7" :class="'chat-'+ checkPosition(item.username)" >
               <p>{{item.msg}}</p>
               <span>{{item.username}}</span>
-              <span class="time-left">time here</span>
+              <span class="time-left">{{item.time}}</span>
             </div>
           </div>
           <div class="field has-addons">
             <div class="control is-expanded">
-              <input v-model="chatMsg" class="input" type="text" placeholder="입력하세요.." @keyup.enter="sendMessage" v-if="isLogined">
-              <div class="dropdown is-up" :class="{'is-active': showDropdown}" v-if="!isLogined" @click="showDropdown = !showDropdown">
+              <input v-model="chatMsg" class="input" type="text" placeholder="입력하세요.." @keyup.enter="sendMessage" v-if="openChatFlag">
+              <div class="dropdown is-up" :class="{'is-active': showDropdown}" v-if="!openChatFlag" @click="showDropdown = !showDropdown">
                 <div class="dropdown-trigger">
                   <button class="button guestButton" aria-haspopup="true" aria-controls="dropdown-menu">
                     <span> 입력하세요.. </span>
@@ -27,10 +27,11 @@
                 </div>
                   <div class="dropdown-menu" id="dropdown-menu" role="menu">
                     <div class="dropdown-content">
-                      <a class="dropdown-item">로그인이 필요합니다.</a>
-                      <div class="dropdown-item">
-                        <input class="input" type="text" placeholder="임시 접속 닉네임..">
-                        <a>확인</a>
+                      <a class="dropdown-item has-text-centered" @click="setLoginModal('is-active')">회원가입 or 로그인</a>
+                      <hr class="dropdown-divider">
+                      <div class="dropdown-item field has-addons" v-if="allowGuest">
+                        <input class="input" id="guestname" type="text" placeholder="임시 접속 닉네임.." v-model="guestname" @keyup.enter="changeUsername(guestname, 'guest')">
+                        <a class="button" @click="changeUsername(guestname, 'guest')">확인</a>
                       </div>
                     </div>
                   </div>
@@ -56,6 +57,8 @@ export default {
       socket: null,
       joinChatRoomInfo: {roomname: this.roomname, username: null},
       showDropdown: false,
+      openChatFlag: false,
+      guestname: null,
     }
   },
   computed: {
@@ -64,29 +67,49 @@ export default {
     },
     isLogined() {
       return this.$store.state.auth.isLogined;
+    },
+    allowGuest() {
+      return this.$store.state.chat.allowGuest;
+    },
+    userList() {
+      return this.$store.state.chat.userList;
     }
   },
   mounted() {
     this.initializeSocket();
     this.joinChatRoom();
-    this.$eventBus.$on('login', this.changeUsername);
+    this.openChatFlag = this.isLogined;
+    this.$eventBus.$on('login', this.whenLogin);
+    document.getElementById('guestname').addEventListener('click', (event) => { event.stopPropagation();});
   },
   beforeDestroy() {
     this.disconnectSocket();
   },
+  updated() {
+    const chatlist = document.getElementsByClassName('chatlist')[0];
+    chatlist.scrollTop = chatlist.scrollHeight;
+  },
   methods: {
     ...mapMutations([
       'addMsg',
+      'resetMsg',
       'setUserList',
       'addBan',
       'removeBan',
       'setGuestname',
+      'setLoginModal'
     ]),
     initializeSocket() {
       if(!this.socket){
         this.socket = io('http://whowant.ml:3000');
         this.socket.on('receiveMessage', (chatMsg) => {
           this.addMsg(chatMsg);
+        });
+        this.socket.on('openChat', ({openChatFlag}) => {
+          this.openChatFlag = openChatFlag;
+        });
+        this.socket.on('getUserList', ({userList}) => {
+          this.setUserList(userList);
         });
       }
     },
@@ -111,6 +134,7 @@ export default {
       if(this.socket){
         this.socket.disconnect();
         this.socket = null;
+        this.resetMsg();
       }
     },
     checkPosition(username) {
@@ -120,13 +144,16 @@ export default {
       }
       return 'left';
     },
-    changeUsername() {
+    whenLogin() {
       const userInfo = window.localStorage.getItem('COUCH_USER');
       let username;
       if(userInfo) {
         username = JSON.parse(userInfo).username;
       }
-      this.socket.emit('changeUsername', {username: username});
+      this.changeUsername(username, 'user');
+    },
+    changeUsername(username, userType) {
+      this.socket.emit('changeUsername', {username: username, userType: userType});
     }
   }
 }

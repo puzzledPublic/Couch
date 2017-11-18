@@ -92,6 +92,7 @@ export default {
         if(this.checkResult()){
           this.$emit('logined');
           this.$emit('close');
+          this.password = '';
           if(this.$eventBus.$emit) {
             this.$eventBus.$emit('login');
           }  //global event for login

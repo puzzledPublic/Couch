@@ -15,6 +15,8 @@ module.exports = (server) => {
             }
             roomList[roomname].addUser(userInfo);    
             client.join(roomname);
+
+            io.to(roomname).emit('getUserList', {userList: getUserList(roomList[roomname])});
         });
         
         client.on('sendMessage', ({msg}) => {
@@ -25,7 +27,10 @@ module.exports = (server) => {
             });
         });
 
-        client.on('changeUsername', ({username}) => {
+        client.on('changeUsername', ({username, userType}) => {
+            if(userType === 'guest') {
+                username = '(guest) ' + username;
+            }
             const [socketId, roomname] = Object.keys(client.rooms);
             const userInfo = {socketId: socketId, username: username};
             if(roomList[roomname] === undefined) {
@@ -33,6 +38,7 @@ module.exports = (server) => {
             }
             roomList[roomname].removeUser(socketId);
             roomList[roomname].addUser(userInfo);
+            client.emit('openChat', {openChatFlag : true});
         });
 
         client.on('disconnect', () => {
@@ -44,6 +50,14 @@ module.exports = (server) => {
                     break;
                 }
             }
+            io.to(roomname).emit('getUserList', {userList: getUserList(roomList[roomname])});
         })
     });
+}
+function getUserList(userMap) {
+    let userList = [];
+    userMap.forEach((item) => {
+        userList.push(item);
+    });
+    return userList;
 }

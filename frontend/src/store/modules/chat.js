@@ -1,6 +1,6 @@
 
 const state = {
-    guestname: null,
+    allowGuest: true,
     chatMsgList: [],
     userList: [],
     banList: [],
@@ -19,8 +19,12 @@ const mutations = {
     addMsg(state, {msg, username}) {
         state.chatMsgList.push({
             username: username,
-            msg: msg
+            msg: msg,
+            time: getCurrentTime(),
         });
+    },
+    resetMsg(state) {
+        state.chatMsgList = [];
     },
     setUserList(state, userList) {
         state.userList = userList;
@@ -31,10 +35,15 @@ const mutations = {
     removeBan(state, user) {
         
     },
-    setGuestName(state, guestname) {
-        state.guestname = guestname;
+    setAllowGuest(state, flag) {
+        state.allowGuest = flag;
     }
 
+}
+
+function getCurrentTime() {
+    const time = new Date();
+    return time.getHours() + ':' + time.getMinutes();
 }
 
 export default {

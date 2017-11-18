@@ -29,7 +29,7 @@
             <div class="navbar-end">
                 <div class="navbar-item">
                     <p class="control">
-                        <button class="login button is-primary" v-if="!isLogined" @click="showModal = 'is-active'" >Sign Up/ Sign In</button>   
+                        <button class="login button is-primary" v-if="!isLogined" @click="setLoginModal('is-active')" >Sign Up/ Sign In</button>   
                     </p>     
                     <div class="logined navbar-item has-dropdown is-hoverable" v-if="isLogined">
                         <span class="navbar-link">{{username}} 님</span>
@@ -42,7 +42,7 @@
                 </div> 
             </div>
         </div>
-        <login-modal :activeModal="showModal" @close="showModal = ''" v-on:logined="loginToUser"></login-modal>
+        <login-modal :activeModal="loginModal" @close="setLoginModal('')" v-on:logined="loginToUser"></login-modal>
     </nav>
 </div>
 </template>
@@ -54,7 +54,6 @@ export default {
     data() {
         return{
             active: 'home',
-            showModal: '',
             username: '',
         }
     },
@@ -71,13 +70,17 @@ export default {
     computed: {
         isLogined() {
             return this.$store.state.auth.isLogined;
+        },
+        loginModal() {
+            return this.$store.state.auth.loginModal;
         }
     },
     // Functions we will be using.
     methods: {
-        ...mapMutations({
-            setLoginFlag: 'setLoginFlag' 
-        }),
+        ...mapMutations([
+            'setLoginFlag',
+            'setLoginModal',
+        ]),
         ...mapActions({
             logoutAction: 'logoutAction',
             setBroadcastConfigAction: 'setBroadcastConfigAction'
@@ -98,7 +101,9 @@ export default {
         },
         logout() {
             this.logoutAction();
-            this.$eventBus.$emit('logout');
+            if(this.$eventBus.$emit) {
+                this.$eventBus.$emit('logout');
+            }
         }
     },
 
