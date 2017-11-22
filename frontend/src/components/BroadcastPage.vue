@@ -23,4 +23,9 @@ export default {
     margin-top: 20px;
     padding: 0;
 }
+@media only screen and (max-width:800px) {
+    .broadcastPage {
+        margin-top: 0;
+    }
+}
 </style>

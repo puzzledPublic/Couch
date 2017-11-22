@@ -15,3 +15,7 @@ export const setBroadcastConfig = doAsync(({username, show, roomname, typeNum}) 
         type: type
     },{withCredentials: true});
 });
+
+export const enterRoom = doAsync(({username}) => {
+    return axios.get(`http://whowant.ml:3000/broadcast/${username}`, {withCredentials: true});
+});
