@@ -16,7 +16,7 @@ module.exports = (server) => {
             roomList[roomname].addUser(userInfo);    
             client.join(roomname);
 
-            io.to(roomname).emit('getUserList', {userList: getUserList(roomList[roomname])});
+            io.to(roomname).emit('getUserList', {userList: getUserList(roomList[roomname].userList)});
         });
         
         client.on('sendMessage', ({msg}) => {
@@ -36,21 +36,27 @@ module.exports = (server) => {
             if(roomList[roomname] === undefined) {
                 return;
             }
+            if(roomList[roomname].hasUsernameAlready(username)) {
+                client.emit('denyRequest', {msg: '닉네임이 이미 존재합니다.'});
+                return;
+            }
             roomList[roomname].removeUser(socketId);
             roomList[roomname].addUser(userInfo);
             client.emit('openChat', {openChatFlag : true});
+            io.to(roomname).emit('getUserList', {userList: getUserList(roomList[roomname].userList)});
         });
 
         client.on('disconnect', () => {
-            for(const item in roomList) {
-                if(roomList[item].removeUser(client.id)){
-                    if(roomList[item].getUserCount() === 0){
-                        delete roomList[item];
+            for(const roomname in roomList) {
+                if(roomList[roomname].removeUser(client.id)){
+                    if(roomList[roomname].getUserCount() === 0){
+                        delete roomList[roomname];
+                        break;
                     }
+                    io.to(roomname).emit('getUserList', {userList: getUserList(roomList[roomname].userList)});
                     break;
                 }
             }
-            io.to(roomname).emit('getUserList', {userList: getUserList(roomList[roomname])});
         })
     });
 }
