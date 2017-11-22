@@ -94,7 +94,11 @@ const webpackConfig = merge(baseWebpackConfig, {
         to: config.build.assetsSubDirectory,
         ignore: ['.*']
       }
-    ])
+    ]),
+    //videojs enroll in window
+    new webpack.ProvidePlugin({
+      'window.videojs': 'video.js/dist/video.js'
+    }),
   ]
 })
 

@@ -31,6 +31,10 @@ module.exports = merge(baseWebpackConfig, {
       template: 'index.html',
       inject: true
     }),
-    new FriendlyErrorsPlugin()
+    new FriendlyErrorsPlugin(),
+    //video js enroll in window
+    new webpack.ProvidePlugin({
+      'window.videojs': 'video.js/dist/video.js'
+    }),
   ]
 })
