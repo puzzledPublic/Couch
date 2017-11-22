@@ -4,16 +4,29 @@
       <aside class="menu">
           <div class="tabs is-small is-centered">
             <ul>
-              <li class="is-active"><a>채팅</a></li>
-              <li><a>참여자</a></li>
-              <li><a>차단</a></li>
+              <li class="tab-item is-active" @click="changeViewList('chatlist', $event)"><a>채팅</a></li>
+              <li class="tab-item" @click="changeViewList('userlist', $event)"><a>참여자({{userList.length}})</a></li>
+              <li class="tab-item" @click="changeViewList('banlist', $event)"><a>차단</a></li>
             </ul>
           </div>
-          <div class="chatlist" >
+          <div class="chatlist view-item">
             <div v-for="item in chatMsgList" :key="item.id" class="is-size-7" :class="'chat-'+ checkPosition(item.username)" >
               <p>{{item.msg}}</p>
-              <span>{{item.username}}</span>
+              <span @click="popupUserMenu(item.username, $event)"><a>{{item.username}}</a></span>
               <span class="time-left">{{item.time}}</span>
+            </div>
+          </div>
+          <div class="userlist view-item">
+            <div v-for="item in userList" :key="item.id" class="is-size-7" v-if="item !== 'guest'">
+              <div><a @click="popupUserMenu(item, $event)">{{item}}</a></div>
+            </div>
+            <div class="is-size-7" v-if="guestCount > 0">
+              <div>guest {{guestCount}} 명</div>
+            </div>
+          </div>
+          <div class="banlist view-item">
+            <div v-for="item in banList" :key="item.id" class="is-size-7">
+              <div><a @click="popupUserMenu(item, $event)">{{item}}</a></div>
             </div>
           </div>
           <div class="field has-addons">
@@ -38,9 +51,13 @@
               </div>
             </div>
           </div>
+          <div class="user-menu">
+            <div class="is-size-7"></div>
+            <div class="is-size-7" @click="banUser" v-if="!isUserBanned"><a>차단하기</a></div>
+            <div class="is-size-7" @click="banUser" v-if="isUserBanned"><a>차단풀기</a></div>
+          </div>
       </aside>
     </div>
-    
   </div>
 </template>
 
@@ -59,6 +76,7 @@ export default {
       showDropdown: false,
       openChatFlag: false,
       guestname: null,
+      isUserBanned: false
     }
   },
   computed: {
@@ -73,6 +91,12 @@ export default {
     },
     userList() {
       return this.$store.state.chat.userList;
+    },
+    banList() {
+      return this.$store.state.chat.banList;
+    },
+    guestCount() {
+      return this.$store.state.chat.guestCount;
     }
   },
   mounted() {
@@ -81,13 +105,17 @@ export default {
     this.openChatFlag = this.isLogined;
     this.$eventBus.$on('login', this.whenLogin);
     document.getElementById('guestname').addEventListener('click', (event) => { event.stopPropagation();});
+    document.addEventListener('click', this.closeUserMenu);
   },
   beforeDestroy() {
     this.disconnectSocket();
+    document.removeEventListener('click', this.closeUserMenu);
   },
   updated() {
     const chatlist = document.getElementsByClassName('chatlist')[0];
-    chatlist.scrollTop = chatlist.scrollHeight;
+    if(chatlist) {
+      chatlist.scrollTop = chatlist.scrollHeight;
+    }
   },
   methods: {
     ...mapMutations([
@@ -111,6 +139,9 @@ export default {
         this.socket.on('getUserList', ({userList}) => {
           this.setUserList(userList);
         });
+        this.socket.on('denyRequest', ({msg}) => {
+          alert(msg);
+        })
       }
     },
     joinChatRoom() {
@@ -123,7 +154,7 @@ export default {
       this.socket.emit('joinChatRoom', this.joinChatRoomInfo);
     },
     sendMessage() {
-      if(this.chatMsg === '') {
+      if(this.chatMsg.trim() === '') {
         return;
       }else {
         this.socket.emit('sendMessage', {msg: this.chatMsg});
@@ -153,7 +184,51 @@ export default {
       this.changeUsername(username, 'user');
     },
     changeUsername(username, userType) {
+      if(userType === 'guest') {
+        this.joinChatRoomInfo.username = `(guest) ${username}`;
+      }else {
+        this.joinChatRoomInfo.username = username;
+      }
       this.socket.emit('changeUsername', {username: username, userType: userType});
+    },
+    changeViewList(viewname, event) {
+      let tabItems = document.getElementsByClassName('tab-item');
+      let viewItems = document.getElementsByClassName('view-item');
+      for(let i = 0 ; i < tabItems.length ; i++) {
+        tabItems[i].className = tabItems[i].className.replace(' is-active', '');
+        viewItems[i].style.display = 'none';
+      }
+      document.getElementsByClassName(viewname)[0].style.display = 'block';
+      event.currentTarget.className += ' is-active';
+    },
+    popupUserMenu(username, event) {
+      event.stopPropagation();
+      this.isUserBanned = false;
+      if(this.banList.includes(username)) {
+        this.isUserBanned = true;
+      }
+      const xPos = event.pageX;
+      const yPos = event.pageY;
+      document.getElementsByClassName('user-menu')[0].style.display = 'block';
+      document.getElementsByClassName('user-menu')[0].children[0].textContent = username;
+      document.getElementsByClassName('user-menu')[0].style.left = xPos + 'px';
+      document.getElementsByClassName('user-menu')[0].style.top = yPos + 'px';
+    },
+    banUser() {
+      const username = document.getElementsByClassName('user-menu')[0].children[0].textContent.trim();
+      if(this.isUserBanned) {
+        this.removeBan(username);
+      }else {
+        if(this.joinChatRoomInfo.username === username) {
+          alert('자신은 차단 할 수 없습니다.');
+        }else {
+          this.addBan(username);
+        }
+      }
+      document.getElementsByClassName('user-menu')[0].style.display = 'none';
+    },
+    closeUserMenu() {
+      document.getElementsByClassName('user-menu')[0].style.display = 'none';
     }
   }
 }
@@ -165,7 +240,18 @@ export default {
   border: 1px solid;
   padding: 5px;
 }
-.chatlist {
+@media only screen and (max-width: 800px) {
+  .column {
+    padding: 0;
+  }
+  .chatbox {
+    padding: 0 0.75rem;
+  }
+}
+.userlist, .banlist {
+  display: none;
+}
+.chatlist, .userlist, .banlist {
   position: relative;
   top: 0;
   overflow-y: auto;
@@ -196,5 +282,15 @@ export default {
 }
 .dropdown, .dropdown-trigger, .guestButton, .dropdown-menu {
   width: 100%;
+}
+.user-menu {
+  display: none;
+  position: absolute;
+  background-color: #dedede;
+  border: 1px solid ;
+  border-radius: 5px;
+}
+a {
+  color: inherit;
 }
 </style>
