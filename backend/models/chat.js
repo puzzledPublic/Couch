@@ -14,6 +14,14 @@ class Chat {
     getUserCount() {
         return this.userList.size;
     }
+    hasUsernameAlready(username) {
+        for(const i of this.userList) {
+            if(i[1] === username) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
 
 module.exports = Chat;
