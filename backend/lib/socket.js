@@ -45,7 +45,18 @@ module.exports = (server) => {
             client.emit('openChat', {openChatFlag : true});
             io.to(roomname).emit('getUserList', {userList: getUserList(roomList[roomname].userList)});
         });
-
+        
+        client.on('logout', () => {
+            const [socketId, roomname] = Object.keys(client.rooms);
+            const userInfo = {socketId: socketId, username: 'guest'};
+            if(roomList[roomname] === undefined) {
+                return;
+            }
+            roomList[roomname].removeUser(socketId);
+            roomList[roomname].addUser(userInfo);
+            client.emit('openChat', {openChatFlag : false});
+            io.to(roomname).emit('getUserList', {userList: getUserList(roomList[roomname].userList)});
+        });
         client.on('disconnect', () => {
             for(const roomname in roomList) {
                 if(roomList[roomname].removeUser(client.id)){
