@@ -1,5 +1,8 @@
 {
     "typeList": [
         "all", "movie", "animation", "entertain", "music", "talk", "game", "goout"
+    ],
+    "typeListKOR": [
+        "전체목록", "영화", "애니메이션", "엔터테이먼트", "음악", "토크", "게임", "야외"
     ]
 }

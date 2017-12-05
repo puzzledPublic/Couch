@@ -31,7 +31,7 @@ module.exports.getInfo = doAsync( async (req, res, next) => {
     if(!info){
         return res.status(404).send({msg: 'no such info exist'});
     }
-
+    
     //info.type = broadcastLib(info.type); 
 
     res.send({msg: 'info', info: info});
