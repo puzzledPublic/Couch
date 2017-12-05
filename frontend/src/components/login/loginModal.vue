@@ -1,11 +1,11 @@
 <template>
   <div class="modal" :class="activeModal">
-    <div class="modal-background" @click="$emit('close')"></div>
+    <div class="modal-background" @click="closeModal()"></div>
     <div class="modal-card">
       <header class="modal-card-head">
         <p v-if="!register" class="modal-card-title">로그인</p>
         <p v-if="register" class="modal-card-title">회원가입</p>
-        <button class="delete" aria-label="close" @click="$emit('close')"></button>
+        <button class="delete" aria-label="close" @click="closeModal()"></button>
       </header>
       <section class="modal-card-body">
         <div class="field">
@@ -29,7 +29,7 @@
         <div class="field">
           <label class="label">Password</label>
           <div class="control has-icons-left">
-            <input v-model="password" class="input" type="password" placeholder="비밀번호...">
+            <input v-model="password" class="input" type="password" placeholder="비밀번호..." @keyup.enter="request">
             <span class="icon is-small is-left">
               <i class="fa fa-lock"></i>
             </span>
@@ -51,8 +51,8 @@
           <button v-if="!register" class="button" @click="register = true">회원가입</button>
         </div>
         <div>
-          <button class="button is-success" @click="request">확인</button>
-          <button class="button" @click="$emit('close')">취소</button>
+          <button class="button is-link" @click="request">확인</button>
+          <button class="button" @click="closeModal()">취소</button>
         </div>
       </footer>
     </div>
@@ -75,7 +75,9 @@ export default {
   props: ['activeModal']
   ,
   methods: {
-    close() {
+    closeModal() {
+      this.email = this.username = this.password = this.passwordCheck = '';
+      this.register = false;
       this.$emit('close');
     },
     async request() {
@@ -93,7 +95,7 @@ export default {
           this.$emit('logined');
           this.$emit('close');
           this.password = '';
-          if(this.$eventBus.$emit) {
+          if(this.$eventBus.$on) {
             this.$eventBus.$emit('login');
           }  //global event for login
         }

@@ -15,7 +15,7 @@ export default {
     'navbar': navbar,
   },
   created() {
-    this.$store.dispatch('loginCheckAction');
+    //this.$store.dispatch('loginCheckAction');
   }
 }
 </script>
@@ -26,12 +26,5 @@ html, body{
   background-color: #ddd;
   height: 100%;
 }
-/*
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  color: #2c3e50;
-  overflow: auto;
-}*/
+
 </style>

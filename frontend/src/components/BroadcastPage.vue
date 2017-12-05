@@ -13,15 +13,15 @@ export default {
     components: {
         broadcastPlayer: broadcastPlayer,
         chatBox: chatBox,
-    }
-
+    },
 }
 </script>
 
 <style scoped>
 .broadcastPage {
-    margin-top: 20px;
+    margin: 20px 1px 0px 1px;
     padding: 0;
+    border-top: 3px solid royalblue;
 }
 @media only screen and (max-width:800px) {
     .broadcastPage {

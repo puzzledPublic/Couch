@@ -43,7 +43,7 @@
                       <a class="dropdown-item has-text-centered" @click="setLoginModal('is-active')">회원가입 or 로그인</a>
                       <hr class="dropdown-divider">
                       <div class="dropdown-item field has-addons" v-if="allowGuest">
-                        <input class="input" id="guestname" type="text" placeholder="임시 접속 닉네임.." v-model="guestname" @keyup.enter="changeUsername(guestname, 'guest')">
+                        <input class="input" id="guestname" type="text" placeholder="임시 접속 닉네임.." v-model="guestname" @click="$event.stopPropagation()" @keyup.enter="changeUsername(guestname, 'guest')">
                         <a class="button" @click="changeUsername(guestname, 'guest')">확인</a>
                       </div>
                     </div>
@@ -104,10 +104,12 @@ export default {
     this.joinChatRoom();
     this.openChatFlag = this.isLogined;
     this.$eventBus.$on('login', this.whenLogin);
-    document.getElementById('guestname').addEventListener('click', (event) => { event.stopPropagation();});
+    this.$eventBus.$on('logout', this.whenLogout);
     document.addEventListener('click', this.closeUserMenu);
   },
   beforeDestroy() {
+    this.$eventBus.$off('login', this.whenLogin);
+    this.$eventBus.$off('logout', this.whenLogout);
     this.disconnectSocket();
     document.removeEventListener('click', this.closeUserMenu);
   },
@@ -182,6 +184,9 @@ export default {
         username = JSON.parse(userInfo).username;
       }
       this.changeUsername(username, 'user');
+    },
+    whenLogout() {
+      this.socket.emit('logout');
     },
     changeUsername(username, userType) {
       if(userType === 'guest') {

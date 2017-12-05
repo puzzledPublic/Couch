@@ -6,14 +6,16 @@
                     방송주제
                 </p>
                 <ul class="menu-list">
-                    <li><a @click="setType(0)">전체목록</a></li>
-                    <li><a @click="setType(1)">영화</a></li>
-                    <li><a @click="setType(2)">애니메이션</a></li>
-                    <li><a @click="setType(3)">엔터테이먼트</a></li>
-                    <li><a @click="setType(4)">음악</a></li>
-                    <li><a @click="setType(5)">토크</a></li>
-                    <li><a @click="setType(6)">게임</a></li>
-                    <li><a @click="setType(7)">야외방송</a></li>
+                    <li v-for="(type, index) in typeList" v-key="index">
+                        <a @click="setType(index)">{{type}}</a>
+                    </li>
+                </ul>
+                <p class="menu-label">
+                    게시판
+                </p>
+                <ul class="menu-list">
+                    <li><a>자유 게시판</a></li>
+                    <li><a>PD 게시판</a></li>
                 </ul>
             </aside>
             <div class="dropdown is-12">
@@ -24,21 +26,13 @@
                 </div>
                 <div class="dropdown-menu">
                     <div class="dropdown-content">
-                        <a @click="setType(0)" class="dropdown-item">전체목록</a>
-                        <a @click="setType(1)" class="dropdown-item">영화</a>
-                        <a @click="setType(2)" class="dropdown-item">애니메이션</a>
-                        <a @click="setType(3)" class="dropdown-item">엔터테이먼트</a>
-                        <a @click="setType(4)" class="dropdown-item">음악</a>
-                        <a @click="setType(5)" class="dropdown-item">토크</a>
-                        <a @click="setType(6)" class="dropdown-item">게임</a>
-                        <a @click="setType(7)" class="dropdown-item">야외방송</a>
+                        <a class="dropdown-item" @click="setType(index)" v-for="(type, index) in typeList" v-key="index">{{type}}</a>
                     </div>
                 </div>
             </div>
         </div>
         
         <div class="column">
-            <div></div>
             <Broadcast-List :broadcastType="type" :broadcastList="broadcastList"></Broadcast-List>
         </div>
     </div>  
@@ -46,14 +40,15 @@
 
 <script>
 import mainBroadcastList from '@/components/main/BroadcastList';
-import axios from 'axios';
 import {mapGetters} from 'vuex';
+import {typeListKOR} from '@/api/util/broadcastTypeList'
 
 export default {
     name: 'MainContent',
     data() {
         return {
             type: 0,
+            typeList: typeListKOR
         }
     },
     components: {
@@ -91,6 +86,8 @@ export default {
 <style scoped>
 .content {
     margin: 20px 1px 0px 1px;
+    height: 100vh;
+    border-top: 3px solid royalblue;
 }
 .menu-list {
     list-style-type: none;
@@ -99,6 +96,7 @@ export default {
 }
 .column {
     background-color: #fff;
+    border-right: 1px solid #ddd;
 }
 .dropdown {
     display: none;
