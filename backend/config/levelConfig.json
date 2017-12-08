@@ -1,0 +1,9 @@
+{
+    "Level": 
+    {
+        "GUEST": 0, 
+        "USER": 1,
+        "OWNER": 2,
+        "ADMIN": 5
+    }
+}
