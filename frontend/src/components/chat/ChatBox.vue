@@ -1,5 +1,5 @@
 <template>
-  <div class="column">
+  <div class="column is-3 chat-wrap">
     <div class="chatbox">
       <aside class="menu">
           <div class="tabs is-small is-centered">
@@ -240,7 +240,9 @@ export default {
 </script>
 
 <style scoped>
-
+.chat-wrap {
+  background-color: white;
+}
 .chatbox {
   border: 1px solid;
   padding: 5px;

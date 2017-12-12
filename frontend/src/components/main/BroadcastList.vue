@@ -1,32 +1,30 @@
 <template>
-    <div class="columns is-multiline" v-if="broadcastList.length > 0">
-        <div class="column is-3" v-for="item in broadcastList" :key="item.username" v-if="calcType(item.type)">
-            <router-link class="card-link" :to="'/broadcast/' + item.username">
-                <div class="card">
-                    <div class="card-image">
-                        <figure class="image is-2by1">
-                            <img src="https://bulma.io/images/placeholders/640x320.png" alt="Placeholder image">
-                        </figure>
-                    </div>
-                    <div class="card-content">
-                        <div>
-                            <div class="media-content">
-                                <div class="content">
-                                    <p>
-                                        <strong>{{item.roomname}}</strong><br>
-                                        <span><a>{{item.username}}</a></span>
-                                    </p>
-                                </div>
+    <div class="container is-fluid is-marginless">
+        <div class="columns is-multiline" v-if="broadcastList.length > 0">
+            <div class="column is-one-quarter" v-for="item in broadcastList" :key="item.username" v-if="calcType(item.type)">
+                <router-link class="card-link" :to="'/broadcast/' + item.username">
+                    <div class="card">
+                        <div class="card-image">
+                            <figure class="image is-16by9">
+                                <img src="https://bulma.io/images/placeholders/1280x960.png" alt="Placeholder image">
+                            </figure>
+                        </div>
+                        <div class="card-content is-paddingless">
+                            <div class="content is-small is-marginless room-name">
+                                <strong>{{item.roomname}}</strong>
+                            </div>
+                            <div class="content is-small is-marginless room-name">
+                                <a>{{item.username}}</a>
                             </div>
                         </div>
                     </div>
-                </div>
-            </router-link>
-        </div>    
-    </div>
-    <div class="noBroadcast"v-else>
-        <div>
-            <p class="is-size-4 is-size-7-mobile">진행중인 방송이 없습니다.</p>
+                </router-link>
+            </div>    
+        </div>
+        <div class="noBroadcast"v-else>
+            <div>
+                <p class="is-size-4 is-size-7-mobile">진행중인 방송이 없습니다.</p>
+            </div>
         </div>
     </div>
 </template>
@@ -58,6 +56,16 @@ export default {
 </script>
 
 <style scoped>
+.room-name {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+.card {
+    border-radius: 5px;
+}
+
+/*
 @media only screen and (max-width: 500px){
     .card-image {
         display: none;
@@ -87,5 +95,5 @@ export default {
 }
 .noBroadcast p {
     text-align: center;
-}
+}*/
 </style>

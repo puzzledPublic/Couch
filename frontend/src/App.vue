@@ -1,8 +1,21 @@
 <template>
-  <div id="app" class="container is-fluid">
+  <div id="app" >
       <navbar></navbar>
-    <!--<img src="./assets/logo.png">-->
+
+      <section class="container divider"></section>
+
       <router-view/>
+
+      <footer class="footer">
+        <div class="container">
+            <div class="content has-text-centered">
+                <p>
+                    2017 Couch
+                </p>
+            </div>
+        </div>
+      </footer>
+
   </div>
 </template>
 
@@ -23,8 +36,15 @@ export default {
 <style>
 
 html, body{
-  background-color: #ddd;
+  background-color: #f3f2f0;
   height: 100%;
 }
-
+.divider {
+  margin: 25px 0;
+}
+@media screen and (max-width: 960px){
+  .divider {
+    margin: 12px;
+  }
+}
 </style>

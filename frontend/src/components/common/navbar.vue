@@ -1,6 +1,6 @@
 <template>
-<div>
-    <nav class="navbar" role="navigation" aria-label="main navigation" v-bind:class="active" v-on:click.prevent>
+<section class="container">
+    <nav class="navbar is-transparent" role="navigation" aria-label="main navigation" v-bind:class="active" v-on:click.prevent>
         <div class="home navbar-brand">
             <router-link to="/" class="navbar-item"> 
                 <img src="../../assets/COUCH-logo.png" width="112" height="28">
@@ -41,9 +41,9 @@
                 </div> 
             </div>
         </div>
-        <login-modal :activeModal="loginModal" @close="setLoginModal('')" v-on:logined="loginToUser"></login-modal>
+        <login-modal :activeModal="loginModal" @close="setLoginModal('bounceOutDown is-active')" v-on:logined="loginToUser"></login-modal>
     </nav>
-</div>
+</section>
 </template>
 
 <script>
@@ -107,7 +107,7 @@ export default {
         },
         openLoginModal() {
             this.closeNavBurger();
-            this.setLoginModal('is-active');
+            this.setLoginModal('bounceInUp is-active');
         },
         closeNavBurger() {
             document.getElementsByClassName('navbar-burger')[0].classList.toggle('is-active');
@@ -122,5 +122,8 @@ export default {
 </script>
 
 <style scoped>
+.navbar-brand {
+    margin-left: 0;
+}
 
 </style>

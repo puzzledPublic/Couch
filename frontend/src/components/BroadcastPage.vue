@@ -1,8 +1,10 @@
 <template>
-    <div class="broadcastPage columns">
-        <broadcast-player :username="$route.params.username"></broadcast-player>
-        <chat-box :roomname="$route.params.username"></chat-box>
-    </div>
+    <section class="container wrap">
+        <div class="broadcastPage columns">
+            <broadcast-player :username="$route.params.username"></broadcast-player>
+            <chat-box :roomname="$route.params.username"></chat-box>
+        </div>
+    </section>
 </template>
 
 <script>
@@ -18,6 +20,10 @@ export default {
 </script>
 
 <style scoped>
+.wrap {
+     height: 90%;
+}
+/*
 .broadcastPage {
     margin: 20px 1px 0px 1px;
     padding: 0;
@@ -27,5 +33,5 @@ export default {
     .broadcastPage {
         margin-top: 0;
     }
-}
+}*/
 </style>

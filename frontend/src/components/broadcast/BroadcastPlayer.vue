@@ -1,5 +1,5 @@
 <template>
-    <div class="column is-9">
+    <div class="column is-9 broadcast-wrap">
         <div class="videoPlayer">
             <video :id="videoId" class="video-js vjs-16-9 vjs-big-play-centered" data-setup='{}'>
             </video>
@@ -55,6 +55,32 @@ export default {
 </script>
 
 <style scoped>
+.videoPlayer {
+    padding: 0.75rem 0;
+}
+.main-wrap {
+    height: 97%;
+}
+.broadcast-wrap {
+    background-color: white;
+}
+@media screen and (min-width: 960px) {
+    .main-wrap {
+        padding: 0 20px 0 10px;
+    }
+    .broadcast-wrap {
+        margin-top: 0 0.75rem;
+        margin-right: 10px;
+    }
+}
+@media screen and (min-width: 960px) {
+    
+    .broadcast-wrap {
+        margin-right: 0;
+    }
+}
+
+/*
 @media only screen and (max-width:800px) {
     .column {
         padding: 0;
@@ -62,6 +88,6 @@ export default {
     .videoPlayer {
         padding: 0 0.75rem;
     }
-}
+}*/
 </style>
 

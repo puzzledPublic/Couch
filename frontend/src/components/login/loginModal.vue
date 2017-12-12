@@ -1,5 +1,5 @@
 <template>
-  <div class="modal" :class="activeModal">
+  <div class="modal animated" :class="activeModal">
     <div class="modal-background" @click="closeModal()"></div>
     <div class="modal-card">
       <header class="modal-card-head">
@@ -119,5 +119,60 @@ export default {
 .modal-card-foot {
   justify-content: space-between;
 }
+.animated {
+  animation-duration: 1s;
+  animation-fill-mode: both;
+}
+.bounceInUp {
+  animation-name: bounceInUp;
+}
+@keyframes bounceInUp {
+  from, 60%, 75%, 90%, to {
+    animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
+  }
 
+  from {
+    opacity: 0;
+    transform: translate3d(0, 3000px, 0);
+  }
+
+  60% {
+    opacity: 1;
+    transform: translate3d(0, -20px, 0);
+  }
+
+  75% {
+    transform: translate3d(0, 10px, 0);
+  }
+
+  90% {
+    transform: translate3d(0, -5px, 0);
+  }
+
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+@keyframes bounceOutDown {
+  20% {
+    transform: translate3d(0, 10px, 0);
+  }
+
+  40%, 45% {
+    opacity: 1;
+    transform: translate3d(0, -20px, 0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translate3d(0, 2000px, 0);
+  }
+}
+
+.bounceOutDown {
+  animation-name: bounceOutDown;
+}
+.modal-background {
+  opacity: 0.4;
+}
 </style>
