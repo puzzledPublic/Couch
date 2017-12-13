@@ -5,9 +5,9 @@ const board = require('./board');
 /* GET */
 router.get('/:boardname', board.enter);
 
-//router.get('/:boardname/page/:page', board.getPage);
+router.get('/:boardname/p/:pageNum', board.enter);
 
-router.get('/:boardname/:articleid', board.getArticle);
+router.get('/:boardname/a/:articleid', board.getArticle);
 
 /* POST */
 router.post('/:boardname', board.writeArticle);

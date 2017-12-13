@@ -25,17 +25,21 @@ module.exports.enter = doAsync( async (req, res, next) => {
     if(level < boardInfo.read_level) {
         return res.status(403).send({msg: 'not authroized'});
     }
-
+    const limit = 10;
+    const pageNum = req.params.pageNum && req.params.pageNum > 0 ? req.params.pageNum : 1;
     const articleCount = await models.Article.count({where: {board_id: boardInfo.id}}); 
-    const pagenationInfo = getPagenationInfo(articleCount, 1, 30);
+    const pagenationInfo = getPagenationInfo(articleCount, pageNum, limit);
     const foundArticles = await models.Article.findAll({
         attributes:['id','username', 'title', 'comment_count', 'hit', 'createdAt'], 
-        where: {board_id: boardInfo.id}, offset: 0, limit: 30}
+        where: {board_id: boardInfo.id}, offset: 0, limit: limit}
     );
 
     return res.send({
-        pagenationInfo: pagenationInfo,
-        articles: foundArticles
+        msg: 'success', 
+        boardInfo:{
+            pagenationInfo: pagenationInfo,
+            articles: foundArticles
+        }
     });
 
 });
