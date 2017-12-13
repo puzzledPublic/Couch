@@ -2,6 +2,7 @@ import * as broadcast from '../../api/broadcast';
 
 const state = {
     isBroadcastExist: null,
+    requestListType: 0,
     broadcastList : [],
     streamURL: null,
     broadcastConfig: {
@@ -33,8 +34,7 @@ const actions = {
         if(result.data.info) {
             commit('setBroadcastConfig', result.data.info);
         }
-    }
-    ,
+    },
     async enterBroadcastAction({commit}, username) {
         const result = await broadcast.enterRoom(username);
         if(result.status !== 400) { 
@@ -64,6 +64,9 @@ const mutations = {
         state.broadcastConfig.roomname = info.roomname;
         state.broadcastConfig.typeNum = info.type == 0 ? 1 : info.type;
         state.broadcastConfig.streamkey = info.streamkey; 
+    },
+    setRequestListType(state, type) {
+        state.requestListType = type;
     }
 }
 

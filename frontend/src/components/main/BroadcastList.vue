@@ -21,7 +21,7 @@
                 </router-link>
             </div>    
         </div>
-        <div class="noBroadcast"v-else>
+        <div class="noBroadcast" v-else>
             <div>
                 <p class="is-size-4 is-size-7-mobile">진행중인 방송이 없습니다.</p>
             </div>
@@ -31,21 +31,47 @@
 
 <script>
 import axios from 'axios';
-
+import {typeList} from '@/api/util/broadcastTypeList'
+import {mapMutations, mapActions} from 'vuex'
 export default {
     name: 'BroadcastList',
-    props: ['broadcastType','broadcastList'],
     data() {
         return {
     
         }
     },
+    computed: {
+        broadcastList() {
+            return this.$store.state.broadcast.broadcastList;
+        },
+        requestListType() {
+            return this.$store.state.broadcast.requestListType;
+        }
+    },
+    watch: {
+        '$route' (to, from) {
+            const typeNum = typeList.indexOf(to.query.type);
+            if(typeNum >= 0) {
+                this.setType(typeNum);
+            }
+        }
+    },
     methods: {
+        ...mapMutations([
+            'setRequestListType'
+        ]),
+        ...mapActions([
+            'getBroadcastListAction'
+        ]),
+        setType(typeNum) {
+            this.setRequestListType(typeNum);
+            this.getBroadcastListAction(typeNum);
+        },
         calcType(itemType) {
-            if(this.broadcastType == 0){
+            if(this.requestListType == 0){
                 return true;
             }
-            if(this.broadcastType == itemType){
+            if(this.requestListType == itemType){
                 return true;
             }
             return false;
@@ -64,36 +90,10 @@ export default {
 .card {
     border-radius: 5px;
 }
-
-/*
-@media only screen and (max-width: 500px){
-    .card-image {
-        display: none;
-    }
-}
-.card-link:hover .card {
-    border: solid;
-    border-color: royalblue;
-    box-shadow: 5px 5px royalblue;
-} 
-.card {
-    border-radius: 5px;
-}
-.media {
-    height:70px;
-    overflow:hidden;
-}
-.card-content {
-    border-top: 1px solid #ddd;
-    padding: 10px;
-}
 .noBroadcast {
     padding-top:20%;
     margin: auto;
     width: 50%;
     height: 100;
 }
-.noBroadcast p {
-    text-align: center;
-}*/
 </style>
