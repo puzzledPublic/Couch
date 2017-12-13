@@ -1,10 +1,12 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-//import HelloWorld from '@/components/HelloWorld'
+
 import couchMain from '@/components/CouchMain'
 import broadcastPage from '@/components/BroadcastPage'
 import errorPage from '@/components/ErrorPage'
 import broadcastConfig from '@/components/broadcast/BroadcastConfig'
+import broadcastList from '@/components/main/BroadcastList'
+import articleList from '@/components/board/ArticleList'
 
 import store from '@/store'
 
@@ -16,7 +18,21 @@ const router =  new Router({
     {
       path: '/',
       name: 'CouchMain',
-      component: couchMain
+      component: couchMain,
+      children: [
+        { 
+          path: '', component: broadcastList
+        },
+        {
+          path: 'board', component: articleList
+        },
+        {
+          path: 'board/:boardname', component: articleList
+        },
+        {
+          path: 'board/:boardname/p/:page', component: articleList
+        }
+      ]
     },
     {
       path: '/broadcast/:username',
@@ -36,7 +52,6 @@ const router =  new Router({
       name: 'BroadcastConfig',
       component: broadcastConfig,
       beforeEnter: async (to, from, next) => {
-        //await store.dispatch('loginCheckAction');
         if(store.state.auth.isLogined) {
           const userInfo = window.localStorage.getItem('COUCH_USER');
           let username;
@@ -54,6 +69,10 @@ const router =  new Router({
       path: '/error',
       name: 'ErrorPage',
       component: errorPage
+    },
+    {
+      path: '*',
+      redirect: '/'
     }
   ]
 });
@@ -64,5 +83,4 @@ router.beforeEach(async (to, from, next) => {
   }
   next();
 })
-
 export default router;
