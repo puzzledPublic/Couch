@@ -2,13 +2,17 @@ import Vue from 'vue'
 import Router from 'vue-router'
 
 import couchMain from '@/components/CouchMain'
-import broadcastPage from '@/components/BroadcastPage'
+//import broadcastPage from '@/components/BroadcastPage'
+const broadcastPage = () => import('@/components/BroadcastPage');
 import errorPage from '@/components/ErrorPage'
 import broadcastConfig from '@/components/broadcast/BroadcastConfig'
 import broadcastList from '@/components/main/BroadcastList'
-import articleList from '@/components/board/ArticleList'
+import boardList from '@/components/board/BoardList'
+import articlePage from '@/components/board/ArticlePage'
+import articleDetail from '@/components/board/ArticleDetail'
 
 import store from '@/store'
+import {stringToPositive} from '../api/util/utils'
 
 Vue.use(Router)
 
@@ -24,13 +28,25 @@ const router =  new Router({
           path: '', component: broadcastList
         },
         {
-          path: 'board', component: articleList
+          path: 'board', component: boardList
         },
         {
-          path: 'board/:boardname', component: articleList
+          path: 'board/:boardname', component: articlePage
         },
         {
-          path: 'board/:boardname/p/:page', component: articleList
+          path: 'a/:articleId', component: articleDetail,
+          beforeEnter: async (to, from, next) => {
+            const articleId = stringToPositive(to.params.articleId);
+            if(articleId > 0) {
+              const result = await store.dispatch('getArticleAction',articleId);
+              if(!result) {
+                  next(false);
+              }
+              next();
+            }else {
+                next(false);
+            }
+          }
         }
       ]
     },
