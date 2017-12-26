@@ -11,7 +11,7 @@
 //videojs-contrib-hls 모듈이 window에 있는 videojs와 자동 결합하는듯? 그래서 webpack설정에서 videojs를 window에 먼저 로드한다. 
 const videojs = window.videojs //import videojs from 'video.js' 
 import videocss from 'video.js/dist/video-js.css'
-import 'videojs-contrib-hls/dist/videojs-contrib-hls.js'
+import 'videojs-contrib-hls/dist/videojs-contrib-hls.min.js'
 
 export default {
     name: 'broadcastPage',

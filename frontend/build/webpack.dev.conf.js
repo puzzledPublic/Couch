@@ -34,7 +34,7 @@ module.exports = merge(baseWebpackConfig, {
     new FriendlyErrorsPlugin(),
     //video js enroll in window
     new webpack.ProvidePlugin({
-      'window.videojs': 'video.js/dist/video.js'
+      'window.videojs': 'video.js/dist/video.min.js'
     }),
   ]
 })

@@ -38,16 +38,16 @@
                     <span> 입력하세요.. </span>
                   </button>
                 </div>
-                  <div class="dropdown-menu" id="dropdown-menu" role="menu">
-                    <div class="dropdown-content">
-                      <a class="dropdown-item has-text-centered" @click="setLoginModal('is-active')">회원가입 or 로그인</a>
-                      <hr class="dropdown-divider">
-                      <div class="dropdown-item field has-addons" v-if="allowGuest">
-                        <input class="input" id="guestname" type="text" placeholder="임시 접속 닉네임.." v-model="guestname" @click="$event.stopPropagation()" @keyup.enter="changeUsername(guestname, 'guest')">
-                        <a class="button" @click="changeUsername(guestname, 'guest')">확인</a>
-                      </div>
+                <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                  <div class="dropdown-content">
+                    <a class="dropdown-item has-text-centered" @click="setLoginModal('is-active')">회원가입 or 로그인</a>
+                    <hr class="dropdown-divider">
+                    <div class="dropdown-item field has-addons" v-if="allowGuest">
+                      <input class="input" id="guestname" type="text" placeholder="임시 접속 닉네임.." v-model="guestname" @click="$event.stopPropagation()" @keyup.enter="changeUsername(guestname, 'guest')">
+                      <a class="button" @click="changeUsername(guestname, 'guest')">확인</a>
                     </div>
                   </div>
+                </div>
               </div>
             </div>
           </div>

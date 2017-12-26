@@ -15,7 +15,7 @@
                         커뮤니티
                     </p>
                     <ul class="menu-list">
-                        <li><router-link :to="'/board/free'">자유 게시판</router-link></li>
+                        <li @click="refreshBoardView"><router-link :to="'/board/free'">자유 게시판</router-link></li>
                         <li><a>PD 게시판</a></li>
                     </ul>
                 </aside>
@@ -59,6 +59,12 @@ export default {
         this.activeDropdown();
     },
     methods: {
+        ...mapMutations([
+            'setCurrentViewName'
+        ]),
+        refreshBoardView() {
+            this.setCurrentViewName({mainViewName: 'Article-List'});
+        },
         activeDropdown() {
             document.getElementsByClassName('drop-button')[0].addEventListener('click',() => {
                 document.getElementsByClassName('dropdown')[0].classList.toggle('is-active');
@@ -68,7 +74,11 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+.menu {
+    position: sticky;
+    top: 0;
+}
 .menu-label {
     background-color: royalblue;
     color: white;
