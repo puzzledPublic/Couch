@@ -5,7 +5,7 @@ import App from './App'
 import router from './router'
 import store from './store'
 import bulma from 'bulma/css/bulma.css'
-
+import 'font-awesome/css/font-awesome.min.css'
 //Global EventBus
 Vue.prototype.$eventBus = new Vue();
 
