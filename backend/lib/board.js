@@ -1,4 +1,4 @@
-module.exports.getPagenationInfo = (articleCount, pageNum = 1, limit) => {
+module.exports.getPaginationInfo = (articleCount, pageNum = 1, limit) => {
     const totalPageCount = Math.ceil(articleCount / limit);
     
     if(pageNum > totalPageCount) {
