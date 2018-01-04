@@ -10,7 +10,8 @@ module.exports = (sequelize, DataType) => {
         like: { type: DataType.INTEGER, defaultValue: 0},
         dislike: { type: DataType.INTEGER, defaultValue: 0},
         board_id: { type: DataType.INTEGER, allowNull: false},
-        password: { type: DataType.STRING}
+        password: { type: DataType.STRING},
+        is_user: { type: DataType.BOOLEAN, defaultValue: false}
     });
 
     return Article;

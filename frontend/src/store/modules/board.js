@@ -7,14 +7,20 @@ const state = {
         comment: false
     },
     article: null,
+    isOwner: null,
     articles: null,
     comments: null,
     boardname: null,
     responseStatus: null,
     currentViewName: {
-        main: 'Article-List',
-        sub: ''
+        articlePage: 'Article-List',
+        articleDetailPage: 'Article-Detail'
     },
+    editorMode: 'create',
+    guestArticle: {
+        mode: null,
+        passwordForValidate: null
+    }
     
 }
 
@@ -42,6 +48,7 @@ const actions = {
         if(result.status === 200) {
             commit('setArticle', result.data.articleInfo);
             commit('setComments', result.data.commentInfo);
+            commit('setIsOwner', result.data.owner);
             return true;
         }
         return false;
@@ -61,11 +68,30 @@ const actions = {
             return false;
         }
         const result = await board.writeArticle({
-            title: article.title,
-            content: article.content,
-            username: article.username,
-            password: article.password,
+            article: article,
             boardname: state.boardname
+        });
+        if(result.status === 200) {
+            return true;
+        }
+        return false;
+    },
+    async modifyArticleAction({state, commit}, article) {
+        const result = await board.modifyArticle({
+            article: article,
+            articleId: state.article.id,
+            passwordForValidate: state.guestArticle.passwordForValidate
+        });
+        if(result.status === 200) {
+            commit('setModifyArticle', {title: article.title, content: article.content});
+            return true;
+        }
+        return false;
+    },
+    async deleteArticleAction({state, commit}) {
+        const result = await board.deleteArticle({
+            articleId: state.article.id,
+            passwordForValidate: state.guestArticle.passwordForValidate
         });
         if(result.status === 200) {
             return true;
@@ -84,6 +110,21 @@ const actions = {
         if(result.status === 200) {
             commit('setComments', result.data.commentInfo);
         }
+    },
+    async validatePasswordGuestArticleAction({state, commit}, password) {
+        if(!state.article){
+            return false;
+        }
+        const articleId = state.article.id;
+        const result = await board.validatePasswordGuestArticle({
+            articleId: articleId,
+            password: password
+        });
+        if(result.status === 200) {
+            commit('setGuestArticlePasswordForValidate', password);
+            return true;
+        }
+        return false;
     }
 }
 
@@ -103,9 +144,11 @@ const mutations = {
     setResponseStatus(state, status) {
         state.responseStatus = status;
     },
-    setCurrentViewName(state, {mainViewName, subViewName}) {
-        state.currentViewName.main = mainViewName;
-        state.currentViewName.sub = subViewName;
+    setArticlePageViewName(state, articlePageViewName) {
+        state.currentViewName.articlePage = articlePageViewName;
+    },
+    setArticleDetailPageViewName(state, articleDetailPageViewName) {
+        state.currentViewName.articleDetailPage = articleDetailPageViewName;
     },
     setAccessAuth(state, accessAuth) {
         state.accessAuth.write = accessAuth.write;
@@ -113,6 +156,22 @@ const mutations = {
     },
     setComments(state, comments) {
         state.comments = comments;
+    },
+    setIsOwner(state, owner) {
+        state.isOwner = owner;
+    },
+    setEditorMode(state, mode) {
+        state.editorMode = mode;
+    },
+    setModifyArticle(state, {title, content}) {
+        state.article.title = title;
+        state.article.content = content;
+    },
+    setGuestArticleMode(state, mode) {
+        state.guestArticle.mode = mode;
+    },
+    setGuestArticlePasswordForValidate(state, password) {
+        state.guestArticle.passwordForValidate = password;
     }
 }
 

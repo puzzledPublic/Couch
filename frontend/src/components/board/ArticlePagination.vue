@@ -30,7 +30,7 @@ export default {
   },
   methods: {
     ...mapMutations([
-        'setCurrentViewName'
+        'setArticlePageViewName'
     ]),
     ...mapActions([
         'getArticleListAction'
@@ -43,10 +43,7 @@ export default {
         });
     },
     writeArticle() {
-        this.setCurrentViewName({
-            mainViewName: 'Article-Editor',
-            subViewName: ''
-        });
+        this.setArticlePageViewName('Article-Editor');
     },
     
   }

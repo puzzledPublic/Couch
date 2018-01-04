@@ -17,7 +17,9 @@
                     <div class="media-content">
                         <div class="content">
                             <p>
-                                <a href="#">{{article.username}}</a> posted {{article.createdAt}}  &nbsp; 
+                                <a href="#" v-if="article.is_user">{{article.username}}</a>
+                                <span v-else>{{article.username}}</span>
+                                <span class="is-size-7"> posted {{getTime(article.createdAt)}} </span> 
                             </p>
                         </div>
                     </div>
@@ -31,9 +33,15 @@
 <script>
 import ArticlePagination from '@/components/board/ArticlePagination'
 import {mapMutations, mapActions} from 'vuex'
+import {getArticleWriteTime} from '../../api/util/utils'
 
 export default {
   name: 'ArticleList',
+  data() {
+      return {
+          currentTime: null,
+      }
+  },
   components: {
       'Article-Pagination': ArticlePagination,
   },
@@ -46,15 +54,16 @@ export default {
       }
   },
   created() {
+      this.currentTime = new Date();
       this.getArticleListAction({boardname: this.boardname});
   },
   methods: {
-      ...mapMutations([
-          'setCurrentViewName'
-      ]),
       ...mapActions([
           'getArticleListAction'
-      ])
+      ]),
+      getTime(timeStamp) {
+          return getArticleWriteTime(timeStamp, this.currentTime);
+      }
   }
 }
 </script>

@@ -48,7 +48,7 @@
 
 <script>
 import {mapActions} from 'vuex'
-import {getTime} from '../../api/util/utils'
+import {getCommentWriteTime} from '../../api/util/utils'
 
 export default {
     name: 'ArticleComment',
@@ -105,7 +105,7 @@ export default {
             this.comment.password = null;
         },
         getTime(timeStamp) {
-            return getTime(timeStamp, this.currentTime);
+            return getCommentWriteTime(timeStamp, this.currentTime);
         }
     }
 }

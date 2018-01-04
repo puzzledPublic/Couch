@@ -4,8 +4,7 @@
         <h3 class="title is-3 board-name">Free</h3>
         <div class="bottom-divider"></div>
     </div>
-    <component :is="currentMainViewName"></component>
-    <component :is="currentSubViewName"></component>
+    <component :is="currentArticlePageViewName"></component>
 </div>
 </template>
 
@@ -17,11 +16,8 @@ import {mapMutations} from 'vuex'
 
 export default {
     computed: {
-        currentMainViewName() {
-            return this.$store.state.board.currentViewName.main;
-        },
-        currentSubViewName() {
-            return this.$store.state.board.currentViewName.sub;
+        currentArticlePageViewName() {
+            return this.$store.state.board.currentViewName.articlePage;
         }
     },
     components: {
@@ -31,14 +27,12 @@ export default {
     created() {
         const boardname = this.$route.params.boardname;
         this.setBoardname(boardname);
-        this.setCurrentViewName({
-            mainViewName: 'Article-List',
-            subViewName: ''});
+        this.setArticlePageViewName('Article-List');
     },
     methods: {
         ...mapMutations([
             'setBoardname',
-            'setCurrentViewName'
+            'setArticlePageViewName'
         ])
     }
 }

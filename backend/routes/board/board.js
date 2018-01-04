@@ -6,6 +6,7 @@ const Op = require('sequelize').Op;
 const {getPaginationInfo} = require('../../lib/board');
 const {Level} =  require('../../config/levelConfig');
 const {stringToPositive} = require('../../lib/utils');
+const {createDigest} = require('../../lib/hash');
 
 module.exports.enter = doAsync( async (req, res, next) => {
     const boardname = req.params.boardname;
@@ -14,7 +15,7 @@ module.exports.enter = doAsync( async (req, res, next) => {
         return res.status(404).send({msg: 'no such board exist'});
     }
 
-    const level = Level.GUEST;
+    let level = Level.GUEST;
     if(req.user) {
         level = Level.USER;
         if(req.user.username === boardInfo.owner) {
@@ -36,7 +37,7 @@ module.exports.enter = doAsync( async (req, res, next) => {
     const articleCount = await models.Article.count({where: {board_id: boardInfo.id}}); 
     const paginationInfo = getPaginationInfo(articleCount, pageNum, limit);
     const foundArticles = await models.Article.findAll({
-        attributes: ['id','username', 'title', 'comment_count', 'hit', 'createdAt'], 
+        attributes: ['id','username', 'title', 'comment_count', 'hit', 'is_user', 'createdAt'], 
         where: {board_id: boardInfo.id},
         order: [['createdAt', 'DESC']],
         offset: offset, 
@@ -63,7 +64,7 @@ module.exports.writeArticle = doAsync( async (req, res, next) => {
         return res.status(404).send({msg: 'no such board exist'});
     }
 
-    const level = Level.GUEST;
+    let level = Level.GUEST;
     if(req.user) {
         level = Level.USER;
         if(req.user.username === boardInfo.owner) {
@@ -88,9 +89,10 @@ module.exports.writeArticle = doAsync( async (req, res, next) => {
         const userInfo = await models.User.findOne({attributes:['username','email'], where: {username: req.user.username}});
         article.username = userInfo.username;
         article.email = userInfo.email;
+        article.is_user = true;
     }else {
         article.username = req.body.username;
-        article.password = req.body.password;   //TODO:: need hashing..
+        article.password = createDigest(req.body.password);   //TODO:: need hashing..
     }
     article.title = req.body.title;
     article.content = req.body.content;
@@ -105,13 +107,53 @@ module.exports.writeArticleValidator = [
 
 ];
 
+module.exports.modifyArticle = doAsync( async (req, res, next) => {
+    const articleId = stringToPositive(req.params.articleid);
+    if(articleId < 0) {
+        return res.status(400).send({msg: 'check params'});
+    }
+    const articleInfo = await models.Article.findOne({where:{ id: articleId}});
+    if(!articleInfo) {
+        return res.status(404).send({msg: 'no such article exist'});
+    }
+
+    let level = Level.GUEST;
+    if(req.user) {
+        level = Level.USER;
+        if(req.user.username === articleInfo.username) {
+            level = Level.OWNER;
+        }
+    }
+
+    let articleToModify = {
+        title: req.body.title,
+        content: req.body.content
+    };
+    
+    if(level <= Level.USER) {
+        const passwordForValidate = createDigest(req.body.passwordForValidate);
+        if(passwordForValidate !== articleInfo.password) {
+            return res.status(403).send({msg: 'not authorized'});
+        }
+        articleToModify.password = createDigest(req.body.password);
+    }
+
+    const result = await models.Article.update(articleToModify, {where: {id: articleId}})
+
+    if(result[0] === 1) {
+        return res.send({msg: 'success to modify'});
+    }
+
+    return res.status(500).send({msg: 'fail to modify'});
+});
+
 module.exports.getArticle = doAsync( async (req, res, next) => {
     const articleId = stringToPositive(req.params.articleid); 
     if(articleId < 0) {
         res.status(400).send({msg: 'check params'});
     }
     const articleInfo = await models.Article.findOne({
-        attributes:['id','username', 'title', 'content', 'comment_count', 'hit', 'like', 'dislike', 'board_id', 'createdAt'],
+        attributes:['id','username', 'title', 'content', 'comment_count', 'hit', 'like', 'dislike', 'board_id', 'is_user', 'createdAt'],
         where:{ id: articleId}
     });
     if(!articleInfo) {
@@ -125,10 +167,10 @@ module.exports.getArticle = doAsync( async (req, res, next) => {
         return res.status(404).send({msg: 'no such board exist'});
     }
 
-    const level = Level.GUEST;
+    let level = Level.GUEST;
     if(req.user) {
         level = Level.USER;
-        if(req.user.username === boardInfo.owner) {
+        if(req.user.username === boardInfo.owner || req.user.username === articleInfo.username) {
             level = Level.OWNER;
         }
     }
@@ -136,7 +178,7 @@ module.exports.getArticle = doAsync( async (req, res, next) => {
     if(level < boardInfo.read_level) {
         return res.status(403).send({msg: 'not authorized'});
     }
-    
+
     const commentInfo = await models.Comment.findAll({
         attributes: ['id', 'username', 'content', 'createdAt'],
         where: {article_id: articleId}
@@ -144,8 +186,59 @@ module.exports.getArticle = doAsync( async (req, res, next) => {
 
     return res.send({
         articleInfo: articleInfo,
-        commentInfo: commentInfo
+        commentInfo: commentInfo,
+        owner: level === Level.OWNER ? true : false
     });
+});
+
+module.exports.deleteArticle = doAsync( async (req, res, next) => {
+    const articleId = stringToPositive(req.params.articleid);
+    if(articleId < 0) {
+        return res.status(400).send({msg: 'check params'});
+    }
+
+    const articleInfo = await models.Article.findOne({where: {id: articleId}});
+    if(!articleInfo) {
+        return res.status(404).send({msg: 'no such article exist'});
+    }
+
+    let level = Level.GUEST;
+    if(req.user) {
+        level = Level.USER;
+        if(req.user.username === articleInfo.username) {
+            level = Level.OWNER;
+        }
+    }
+
+    if(level <= Level.USER) {
+        const passwordForValidate = createDigest(req.body.passwordForValidate);
+        if(articleInfo.password !== passwordForValidate) {
+            return res.status(403).send({msg: 'not authorized'});
+        }
+    }
+
+    const result = await models.Article.destroy({where: {id: articleId}});
+
+    return res.send({msg: 'deleted'});
+});
+
+module.exports.validateArticlePassword = doAsync( async (req, res, next) => {
+    const articleId = stringToPositive(req.params.articleid);
+    if(articleId < 0) {
+        return res.status(400).send({msg: 'check params'});
+    }
+    
+    const passwordFromClient = createDigest(req.body.password);
+    const articleInfo = await models.Article.findOne({
+        attributes:['password'],
+        where: {id: articleId}
+    });
+
+    if(passwordFromClient === articleInfo.password) {
+        return res.send({msg: 'matched'});
+    }
+
+    return res.status(401).send({msg: 'not matched'});
 });
 
 module.exports.uploadImage = (req, res, next) => {
@@ -180,7 +273,7 @@ module.exports.writeComment = doAsync( async (req, res, next) => {
         return res.status(404).send({msg: 'no such board exist'});
     }
 
-    const level = Level.GUEST;
+    let level = Level.GUEST;
     if(req.user) {
         level = Level.USER;
         if(req.user.username === boardInfo.owner) {
@@ -199,7 +292,7 @@ module.exports.writeComment = doAsync( async (req, res, next) => {
         comment.email = userInfo.email;
     }else {
         comment.username = req.body.username;
-        comment.password = req.body.password;   //TODO:: need to hash the password..
+        comment.password = createDigest(req.body.password);   //TODO:: need to hash the password..
     }
     comment.content = req.body.content;
     comment.article_id = articleId;

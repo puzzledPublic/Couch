@@ -9,7 +9,7 @@ import broadcastConfig from '@/components/broadcast/BroadcastConfig'
 import broadcastList from '@/components/main/BroadcastList'
 import boardList from '@/components/board/BoardList'
 import articlePage from '@/components/board/ArticlePage'
-import articleDetail from '@/components/board/ArticleDetail'
+import articleDetailPage from '@/components/board/ArticleDetailPage'
 
 import store from '@/store'
 import {stringToPositive} from '../api/util/utils'
@@ -34,7 +34,7 @@ const router =  new Router({
           path: 'board/:boardname', component: articlePage
         },
         {
-          path: 'a/:articleId', component: articleDetail,
+          path: 'a/:articleId', component: articleDetailPage,
           beforeEnter: async (to, from, next) => {
             const articleId = stringToPositive(to.params.articleId);
             if(articleId > 0) {

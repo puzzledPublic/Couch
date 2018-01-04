@@ -34,8 +34,8 @@
             </div>
         </div>
         <div class="control">
-            <button class="button is-link" @click="goToList">목록으로</button>
-            <button class="button is-link is-pulled-right" @click="writeArticle">작성완료</button>
+            <button class="button is-link" @click="goToList(editorMode)">목록으로</button>
+            <button class="button is-link is-pulled-right" @click="writeArticle(editorMode)">작성완료</button>
         </div>
     </div>
 </template>
@@ -76,21 +76,32 @@ export default {
             }
         }
     },
+    created() {
+        if(this.editorMode === 'modify') {
+            this.setArticleToModify();
+        }
+    },
     computed: {
         boardEditor() {
             return this.$refs.boardEditor.quill;
         },
         isLogined() {
             return this.$store.state.auth.isLogined;
+        },
+        editorMode() {
+            return this.$store.state.board.editorMode;
         }
     },
     methods: {
         ...mapMutations([
-            'setCurrentViewName'
+            'setArticlePageViewName',
+            'setArticleDetailPageViewName',
+            'setEditorMode'
         ]),
         ...mapActions([
             'uploadImageFileAction',
-            'writeArticleAction'
+            'writeArticleAction',
+            'modifyArticleAction'
         ]),
         imageHandler() {
             const input = document.createElement('input');
@@ -118,17 +129,41 @@ export default {
             const range = this.boardEditor.getSelection();
             this.boardEditor.insertEmbed(range.index, 'image', imageURL);
         },
-        async writeArticle() {
-            const result = await this.writeArticleAction(this.article);
-            if(result) {
-                this.setCurrentViewName({mainViewName:'Article-List'});
-            }else {
-                alert('저장실패. 다시 확인해주세요.');
+        async writeArticle(editorMode) {
+            //TODO::need to validate article
+            if(editorMode === 'create') {
+                const result = await this.writeArticleAction(this.article);
+                if(result) {
+                    this.setArticlePageViewName('Article-List');
+                }else {
+                    alert('저장실패. 다시 확인해주세요.');
+                }
+            }
+            else if(editorMode === 'modify') {
+                const result = await this.modifyArticleAction(this.article);
+                if(result) {
+                    this.setArticleDetailPageViewName('Article-Detail');
+                }else {
+                    alert('저장실패. 다시 확인해주세요.');
+                }
             }
         },
-        goToList() {
-            this.setCurrentViewName({mainViewName: 'Article-List'});
+        goToList(editorMode) {
+            if(editorMode === 'create') {
+                this.setArticlePageViewName('Article-List');
+            }
+            else if(editorMode === 'modify') {
+                this.$router.push('/board/' + this.$store.state.board.boardname);
+            }
+        },
+        setArticleToModify() {
+            this.article.title = this.$store.state.board.article.title;
+            this.article.content = this.$store.state.board.article.content;
+            this.article.username = this.$store.state.board.article.username;
         }
+    },
+    beforeDestroy() {
+        this.setEditorMode('create');
     }
 }
 </script>

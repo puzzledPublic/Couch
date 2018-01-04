@@ -60,10 +60,10 @@ export default {
     },
     methods: {
         ...mapMutations([
-            'setCurrentViewName'
+            'setArticlePageViewName'
         ]),
         refreshBoardView() {
-            this.setCurrentViewName({mainViewName: 'Article-List'});
+            this.setArticlePageViewName('Article-List');
         },
         activeDropdown() {
             document.getElementsByClassName('drop-button')[0].addEventListener('click',() => {
