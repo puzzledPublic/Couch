@@ -21,11 +21,33 @@ export const uploadImageFile = doAsync((imageFile) => {
     });
 });
 
-export const writeArticle = doAsync(({title, content, username, password, boardname}) => {
+export const writeArticle = doAsync(({article, boardname}) => {
     return axios.post(`http://whowant.ml:3000/board/${boardname}`, {
-        title: title,
-        content: content,
-        username: username,
+        title: article.title,
+        content: article.content,
+        username: article.username,
+        password: article.password
+    }, {withCredentials: true});
+});
+
+export const modifyArticle = doAsync(({article, articleId, passwordForValidate}) => {
+    return axios.put(`http://whowant.ml:3000/board/a/${articleId}`, {
+        title: article.title,
+        content: article.content,
+        password: article.password,
+        passwordForValidate: passwordForValidate
+    },{withCredentials: true});
+});
+
+export const deleteArticle = doAsync(({articleId, passwordForValidate}) => {
+    return axios.delete(`http://whowant.ml:3000/board/a/${articleId}`, {
+        data: {passwordForValidate: passwordForValidate},
+        withCredentials: true
+    });
+});
+
+export const validatePasswordGuestArticle = doAsync(({articleId, password}) => {
+    return axios.post(`http://whowant.ml:3000/board/a/${articleId}`, {
         password: password
     }, {withCredentials: true});
 });
