@@ -5,6 +5,7 @@ import couchMain from '@/components/CouchMain'
 //import broadcastPage from '@/components/BroadcastPage'
 const broadcastPage = () => import('@/components/BroadcastPage');
 import errorPage from '@/components/ErrorPage'
+import configPage from '@/components/ConfigPage'
 import broadcastConfig from '@/components/broadcast/BroadcastConfig'
 import broadcastList from '@/components/main/BroadcastList'
 import boardList from '@/components/board/BoardList'
@@ -51,13 +52,32 @@ const router =  new Router({
       ]
     },
     {
+      path: '/config',
+      name: 'ConfigPage',
+      component: configPage,
+      beforeEnter: async (to, from, next) => {
+        if(store.state.auth.isLogined) {
+            return next();
+        }
+        return next('/');
+      },
+      children: [/*
+        {
+          path: 'board', component: boardConfig
+        },*/
+        {
+          path: 'broadcast', component: broadcastConfig
+        }
+      ]
+    },
+    {
       path: '/broadcast/:username',
       name: 'BroadcastPage',
       component: broadcastPage,
       beforeEnter: async (to, from, next) => {
         await store.dispatch('enterBroadcastAction',{username: to.params.username});
         if(!store.state.broadcast.isBroadcastExist) {
-          return next('/error');
+          return next('/');
         } else{
           return next();
         }
@@ -78,7 +98,7 @@ const router =  new Router({
             }
           }
         }
-        return next('/error');
+        return next('/');
       }
     },
     {

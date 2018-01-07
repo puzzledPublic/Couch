@@ -89,7 +89,7 @@ export default {
         },
         broadcastConfig() {
             this.closeNavBurger();
-            this.$router.push(`/broadcast/${this.username}/config`);
+            this.$router.push(`/config/broadcast`);
         },
         initiateNavBurger() {
             let navbarBurger = document.getElementsByClassName('navbar-burger')[0];

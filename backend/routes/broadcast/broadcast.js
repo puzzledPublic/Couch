@@ -10,7 +10,7 @@ module.exports.enter = doAsync( async (req, res, next) => {
 
     const info = await models.Broadcast.findOne({where: {username: username, show: true}});
 
-    if(!info || !info.show){
+    if(!info || !info.show) {
         return res.status(400).send({msg: 'no such stream exist'});
     }
 
@@ -22,14 +22,19 @@ module.exports.enter = doAsync( async (req, res, next) => {
 
 module.exports.getInfo = doAsync( async (req, res, next) => {
     const username = req.params.username;
-    if(!req.user || req.user.username !== username){
+    if(!req.user || req.user.username !== username) {
         return res.status(403).send({msg: 'not authorized'});
     }
 
     const info = await models.Broadcast.findOne({where: {username: username}});
-
-    if(!info){
-        return res.status(404).send({msg: 'no such info exist'});
+    if(!info) {
+        let applicationInfo = {isExist: false, state: -1 };
+        const application = await models.Application.findOne({where: {username: username}});
+        if(application) {
+            applicationInfo.isExist = true;
+            applicationInfo.state = application.state;
+        }
+        return res.status(404).send({msg: 'no such info exist', applicationInfo: applicationInfo});
     }
     
     //info.type = broadcastLib(info.type); 
@@ -39,12 +44,12 @@ module.exports.getInfo = doAsync( async (req, res, next) => {
 
 module.exports.putInfo = doAsync( async (req, res, next) => {
     const username = req.params.username;
-    if(!req.user || req.user.username !== username){
+    if(!req.user || req.user.username !== username) {
         return res.status(403).send({msg: 'not authorized'});
     }
 
     const validateResult = validationResult(req);
-    if(!validateResult.isEmpty()){
+    if(!validateResult.isEmpty()) {
         return res.status(400).send({msg: 'bad request'});
     }
 
@@ -67,7 +72,7 @@ module.exports.infoValidator = [
 module.exports.list = doAsync( async (req, res, next) => {
     const searchType = req.params.type;
     const typeNum = broadcastLib.typeToInt(searchType);
-    if(typeNum == null){
+    if(typeNum == null) {
         return res.status(404).send({msg: 'no such list exist'});
     }
     
@@ -78,4 +83,22 @@ module.exports.list = doAsync( async (req, res, next) => {
 
     res.send({msg: 'list', list: list});
 
+});
+
+module.exports.apply = doAsync( async (req, res, next) => {
+    const username = req.body.username;
+    const content = req.body.content;
+    const type = req.body.type;
+
+    if(!req.user || req.user.username !== username) {
+        return res.status(400).send({msg: 'bad request'});
+    } 
+    
+    await models.Application.create({
+        username: username, 
+        content: content, 
+        type: type
+    });
+
+    res.send({msg: 'success'});
 });

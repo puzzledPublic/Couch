@@ -16,10 +16,18 @@ export const setBroadcastConfig = doAsync(({username, show, roomname, typeNum}) 
     },{withCredentials: true});
 });
 
-export const getBroadcastConfig = doAsync(({username}) => {
+export const getBroadcastConfig = doAsync((username) => {
     return axios.get(`http://whowant.ml:3000/broadcast/${username}/info`, {withCredentials: true});
 });
 
 export const enterRoom = doAsync(({username}) => {
     return axios.get(`http://whowant.ml:3000/broadcast/${username}`, {withCredentials: true});
+});
+
+export const sendBroadcastApplication = doAsync(({username, content}) => {
+    return axios.post(`http://whowant.ml:3000/broadcast/application`,{
+        username: username,
+        content: content,
+        type: 'broadcast'
+    },{withCredentials: true});
 });
