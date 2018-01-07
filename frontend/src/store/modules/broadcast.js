@@ -27,13 +27,17 @@ const actions = {
         const result = await broadcast.setBroadcastConfig(config);
         commit('setResponseStatus', result.status);
     },
-    async getBroadcastConfigAction({commit, dispatch}, username) {
+    async getBroadcastConfigAction({commit, dispatch}) {
+        const username = JSON.parse(localStorage.getItem('COUCH_USER')).username;
         const result = await broadcast.getBroadcastConfig(username);
-        commit('setResponseStatus', result.status);
-        
+
         if(result.data.info) {
             commit('setBroadcastConfig', result.data.info);
         }
+        if(result.status === 404) {
+            return result.data.applicationInfo;
+        }
+        return null;
     },
     async enterBroadcastAction({commit}, username) {
         const result = await broadcast.enterRoom(username);
@@ -44,6 +48,16 @@ const actions = {
             commit('setBroadcastExist', false);
         }
     },
+    async sendBroadcastApplicationAction({rootState}, content) {
+        const result = await broadcast.sendBroadcastApplication({
+            username: rootState.auth.userInfo.username,
+            content: content
+        });
+        if(result.status === 200) {
+            return true;
+        }
+        return false;
+    }
 }
 
 const mutations = {
