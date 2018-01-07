@@ -40,15 +40,16 @@ const actions = {
     },
     async logoutAction({commit}) {
         const result = await auth.logout();
-        commit('setUserInfo', {id: null, username: null});
-        commit('setLoginFlag', false);
         window.localStorage.removeItem('COUCH_USER');
+        commit('setLoginFlag', false);
+        commit('setUserInfo',{id: null, username: null});
     },
     async loginCheckAction({commit}) {
         const result = await auth.loginCheck();
         if(result.status !== 200){
             window.localStorage.removeItem('COUCH_USER');
             commit('setLoginFlag', false);
+            commit('setUserInfo',{id: null, username: null});
         }
     }
 }
