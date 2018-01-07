@@ -27,11 +27,12 @@ module.exports.create = doAsync( async (req, res, next) => {
     
   //DB 추가
   const user = await models.User.createUser(userParam);
-               await models.Broadcast.createBroadcast(userParam.username);
+               //await models.Broadcast.createBroadcast(userParam.username); 방송 생성
   //토큰 생성
+  /*
   const token = await user.createToken();
 
-  res.cookie('access_token', token, {maxAge: 5 * 60 * 1000, httpOnly: true});
+  res.cookie('access_token', token, {maxAge: 5 * 60 * 1000, httpOnly: true});*/
   res.send({
     msg: user.username+ ' is created', 
     user: {
