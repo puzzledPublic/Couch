@@ -53,9 +53,9 @@ export default {
           return this.$store.state.board.boardname;
       }
   },
-  created() {
+  async created() {
       this.currentTime = new Date();
-      this.getArticleListAction({boardname: this.boardname});
+      await this.getArticleListAction({boardname: this.boardname});
   },
   methods: {
       ...mapActions([

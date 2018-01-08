@@ -7,6 +7,7 @@ const broadcastPage = () => import('@/components/BroadcastPage');
 import errorPage from '@/components/ErrorPage'
 import configPage from '@/components/ConfigPage'
 import broadcastConfig from '@/components/broadcast/BroadcastConfig'
+import boardConfig from '@/components/board/BoardConfig'
 import broadcastList from '@/components/main/BroadcastList'
 import boardList from '@/components/board/BoardList'
 import articlePage from '@/components/board/ArticlePage'
@@ -61,10 +62,10 @@ const router =  new Router({
         }
         return next('/');
       },
-      children: [/*
+      children: [
         {
           path: 'board', component: boardConfig
-        },*/
+        },
         {
           path: 'broadcast', component: broadcastConfig
         }

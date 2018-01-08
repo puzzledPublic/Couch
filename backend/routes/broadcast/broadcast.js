@@ -29,10 +29,15 @@ module.exports.getInfo = doAsync( async (req, res, next) => {
     const info = await models.Broadcast.findOne({where: {username: username}});
     if(!info) {
         let applicationInfo = {isExist: false, state: -1 };
-        const application = await models.Application.findOne({where: {username: username}});
-        if(application) {
+        //const application = await models.Application.findOne({where: {username: username, type: 'broadcast'}});
+        const application = await models.Application.findAll({
+            where: {username: username, type: 'broadcast'},
+            order: [['createdAt', 'DESC']],
+            limit: 1
+        });
+        if(application[0]) {
             applicationInfo.isExist = true;
-            applicationInfo.state = application.state;
+            applicationInfo.state = application[0].state;
         }
         return res.status(404).send({msg: 'no such info exist', applicationInfo: applicationInfo});
     }

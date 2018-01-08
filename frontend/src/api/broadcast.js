@@ -24,10 +24,10 @@ export const enterRoom = doAsync(({username}) => {
     return axios.get(`http://whowant.ml:3000/broadcast/${username}`, {withCredentials: true});
 });
 
-export const sendBroadcastApplication = doAsync(({username, content}) => {
+export const sendBroadcastApplication = doAsync(({username, content, configType}) => {
     return axios.post(`http://whowant.ml:3000/broadcast/application`,{
         username: username,
         content: content,
-        type: 'broadcast'
+        type: configType
     },{withCredentials: true});
 });

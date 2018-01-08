@@ -48,10 +48,12 @@ const actions = {
             commit('setBroadcastExist', false);
         }
     },
-    async sendBroadcastApplicationAction({rootState}, content) {
+    async sendBroadcastApplicationAction({commit}, {content, configType}) {
+        const username = JSON.parse(localStorage.getItem('COUCH_USER')).username;
         const result = await broadcast.sendBroadcastApplication({
-            username: rootState.auth.userInfo.username,
-            content: content
+            username: username,
+            content: content,
+            configType: configType
         });
         if(result.status === 200) {
             return true;
