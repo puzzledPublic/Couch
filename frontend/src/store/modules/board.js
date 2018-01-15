@@ -125,6 +125,13 @@ const actions = {
             return true;
         }
         return false;
+    },
+    async setBoardConfigAction({state}, config) {
+        const result = await board.setBoardConfig(config);
+        if(result === 200) {
+            return true;
+        }
+        return false;
     }
 }
 

@@ -2,8 +2,8 @@
     <section class="container wrap">
         <div class="tabs is-centered">
             <ul>
-                <li class="is-active"><router-link :to="'/config/broadcast'">방송</router-link></li>
-                <li><router-link :to="'/config/board'">게시판</router-link></li>
+                <li @click="activate(1)" :class="{'is-active' : isActive == 1}"><router-link :to="'/config/broadcast'">방송</router-link></li>
+                <li @click="activate(2)" :class="{'is-active' : isActive == 2}"><router-link :to="'/config/board'">게시판</router-link></li>
             </ul>
         </div>
         <router-view></router-view>
@@ -12,7 +12,16 @@
 
 <script>
 export default {
-    
+    data(){
+        return {
+            isActive: 1
+        }
+    },
+    methods: {
+        activate(num) {
+            this.isActive = num;
+        }
+    }
 };
 </script>
 

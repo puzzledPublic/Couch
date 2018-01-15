@@ -59,3 +59,11 @@ export const writeComment = doAsync(({articleId, comment}) => {
         password: comment.password
     }, {withCredentials: true});
 });
+
+export const setBoardConfig = doAsync(({readLevel, writeLevel, commentLevel}) => {
+    return axios.put(`http://whowant.ml:3000/board/info`, {
+        read_level: readLevel,
+        write_level: writeLevel,
+        comment_level: commentLevel
+    },{withCredentials: true});
+});

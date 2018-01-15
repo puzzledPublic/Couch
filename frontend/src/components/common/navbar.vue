@@ -34,7 +34,7 @@
                     <div class="logined navbar-item has-dropdown is-hoverable" v-if="isLogined">
                         <span class="navbar-link">{{username}} 님</span>
                         <div class="dropdown-content navbar-dropdown is-boxed is-right">
-                            <a href="#" class="broadcastConfig navbar-item" @click="broadcastConfig">방송설정</a>
+                            <a href="#" class="broadcastConfig navbar-item" @click="broadcastConfig">설정하기</a>
                             <a href="#" class="logout navbar-item" @click="logout">로그아웃</a>
                         </div>
                     </div>

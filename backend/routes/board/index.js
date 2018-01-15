@@ -22,6 +22,7 @@ router.post('/upload/image', upload.single('image'), board.uploadImage)
 /* PUT */
 router.put('/a/:articleid', board.modifyArticle);
 
+router.put('/info', board.putInfo);
 /* DELETE */
 router.delete('/a/:articleid', board.deleteArticle);
 

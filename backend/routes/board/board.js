@@ -5,7 +5,7 @@ const {matchedData} = require('express-validator/filter');
 const Op = require('sequelize').Op;
 const {getPaginationInfo} = require('../../lib/board');
 const {Level} =  require('../../config/levelConfig');
-const {stringToPositive} = require('../../lib/utils');
+const {stringToPositive, boardLevelCheck} = require('../../lib/utils');
 const {createDigest} = require('../../lib/hash');
 
 module.exports.enter = doAsync( async (req, res, next) => {
@@ -315,4 +315,35 @@ module.exports.writeComment = doAsync( async (req, res, next) => {
     });
 
     res.send({msg: 'success', commentInfo: commentInfo});
+});
+
+module.exports.putInfo = doAsync( async (req, res, next) => {
+    
+    const user = await models.User.findOne({where: {username: req.user.username}});
+    const emailId = user.email.substring(0, user.email.indexOf('@'));
+    const board = await models.Board.findOne({where: {name: emailId}});
+
+    if(!board) {
+        return res.status(404).send({msg: 'not exist board'});
+    }
+
+    const {read_level, write_level, comment_level} = req.body;
+
+    if(!boardLevelCheck([read_level, write_level, comment_level])) {
+        return res.status(400).send({msg: 'bad request'});
+    }
+
+    const result = await models.Board.update({
+            read_level: read_level,
+            write_level: write_level,
+            comment_level: comment_level
+        },
+        {
+            where: {name: emailId}
+        });
+    
+    if(result[0] === 1) {
+        return res.send({msg: 'success'});
+    }
+    return res.status(500).send({msg: 'fail'});
 });

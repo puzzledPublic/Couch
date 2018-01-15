@@ -64,10 +64,24 @@ const router =  new Router({
       },
       children: [
         {
-          path: 'board', component: boardConfig
+          path: 'board', 
+          component: boardConfig,
+          beforeEnter: async (to, from, next) => {
+            if(store.state.auth.isLogined) {
+                return next();
+            }
+            return next('/');
+          },
         },
         {
-          path: 'broadcast', component: broadcastConfig
+          path: 'broadcast', 
+          component: broadcastConfig,
+          beforeEnter: async (to, from, next) => {
+            if(store.state.auth.isLogined) {
+                return next();
+            }
+            return next('/');
+          },
         }
       ]
     },
