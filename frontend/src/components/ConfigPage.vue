@@ -17,9 +17,18 @@ export default {
             isActive: 1
         }
     },
+    mounted() {
+        this.$eventBus.$on("logout", this.whenLogout);
+    },
+    beforeDestroy() {
+        this.$eventBus.$off("logout", this.whenLogout);
+    },
     methods: {
         activate(num) {
             this.isActive = num;
+        },
+        whenLogout() {
+            this.$router.replace("/");
         }
     }
 };

@@ -67,3 +67,7 @@ export const setBoardConfig = doAsync(({readLevel, writeLevel, commentLevel}) =>
         comment_level: commentLevel
     },{withCredentials: true});
 });
+
+export const getBoardConfig = doAsync(() => {
+    return axios.get(`http://whowant.ml:3000/board/info`, {withCredentials: true});
+});

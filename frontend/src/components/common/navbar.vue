@@ -34,6 +34,7 @@
                     <div class="logined navbar-item has-dropdown is-hoverable" v-if="isLogined">
                         <span class="navbar-link">{{username}} 님</span>
                         <div class="dropdown-content navbar-dropdown is-boxed is-right">
+                            <router-link class="navbar-item" v-if="userLevel === 5" :to="'/admin'">관리자 설정</router-link> 
                             <a href="#" class="broadcastConfig navbar-item" @click="broadcastConfig">설정하기</a>
                             <a href="#" class="logout navbar-item" @click="logout">로그아웃</a>
                         </div>
@@ -72,6 +73,9 @@ export default {
         },
         loginModal() {
             return this.$store.state.auth.loginModal;
+        },
+        userLevel() {
+            return this.$store.state.auth.userInfo.level;
         }
     },
     // Functions we will be using.

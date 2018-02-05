@@ -15,7 +15,7 @@ export default {
     components: {
         broadcastPlayer: broadcastPlayer,
         chatBox: chatBox,
-    },
+    }
 }
 </script>
 

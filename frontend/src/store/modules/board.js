@@ -132,6 +132,19 @@ const actions = {
             return true;
         }
         return false;
+    },
+    async getBoardConfigAction({state}) {
+        const result = await board.getBoardConfig();
+        if(result.data) {
+            let boardInfo = {boardInfo : null, applicationInfo : null,};
+            if(result.status === 404) {
+                boardInfo.applcationInfo = result.data.applicationInfo;
+            }else {
+                boardInfo.boardInfo = result.data.info;
+            }
+            return boardInfo;
+        }
+        return null;
     }
 }
 

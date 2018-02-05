@@ -79,12 +79,15 @@
             </div>
         </div>
         </div>
+
         <div v-if="!hasConfig && !application.isExist">
             <Config-Application v-on:sendApplication="sendBroadcastApplication" configType="broadcast"></Config-Application>
         </div>
+
         <div v-if="application.isExist">
             <Config-Apply-State v-on:application="setApplication" :state="application.state"></Config-Apply-State>
         </div>
+
     </div>      
 </template>
 
@@ -117,12 +120,6 @@ export default {
     }else {
         this.hasConfig = true;
     }
-  },
-  mounted() {
-    this.$eventBus.$on("logout", this.whenLogout);
-  },
-  beforeDestroy() {
-    this.$eventBus.$off("logout", this.whenLogout);
   },
   computed: {
     broadcastConfig() {
@@ -164,9 +161,6 @@ export default {
     setApplication() {
         this.application.isExist = false;
         this.application.state = -1;
-    },
-    whenLogout() {
-      this.$router.replace("/");
     }
   }
 };

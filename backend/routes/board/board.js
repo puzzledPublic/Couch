@@ -347,3 +347,27 @@ module.exports.putInfo = doAsync( async (req, res, next) => {
     }
     return res.status(500).send({msg: 'fail'});
 });
+
+module.exports.getInfo = doAsync( async (req, res, next) => {
+
+    const user = await models.User.findOne({where: {username: req.user.username}});
+    const emailId = user.email.substring(0, user.email.indexOf('@'));
+    const board = await models.Board.findOne({where: {name: emailId}});
+
+    if(!board) {
+        let applicationInfo = {isExist: false, state: -1};
+        const application = await models.Appliction.findAll({
+            where: {username: emailId, type: 'board'},
+            order: [['createdAt', 'DESC']],
+            limit: 1
+        });
+
+        if(application[0]) {
+            applicationInfo.isExist = true,
+            applicationInfo.state = application[0].state
+        }
+        return res.status(404).send({msg: 'not exist board', applicationInfo: applicationInfo});
+    }
+
+    res.send({msg: 'success', info: board});
+});
