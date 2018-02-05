@@ -6,6 +6,7 @@ module.exports = (sequelize, DataTypes) => {
         username: { type: DataTypes.STRING, unique: true },
         password: DataTypes.STRING,
         email: { type: DataTypes.STRING, unique : true },
+        level: { type: DataTypes.TINYINT(4), defaultValue: 1 },
         facebookId: DataTypes.STRING,
         facebookToken: DataTypes.STRING,
         googleId: DataTypes.STRING,

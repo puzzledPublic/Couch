@@ -7,7 +7,8 @@ const state = {
     },
     userInfo: {
         id: null,
-        username: null
+        username: null,
+        level: null,
     },
     isLogined: false,
     loginModal: '',
@@ -58,6 +59,7 @@ const mutations = {
     setUserInfo(state, userInfo) {
         state.userInfo.id = userInfo.id;
         state.userInfo.username = userInfo.username;
+        state.userInfo.level = userInfo.level;
     },
     setError(state, message) {
         state.error.status = true;

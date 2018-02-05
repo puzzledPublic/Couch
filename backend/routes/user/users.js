@@ -79,7 +79,8 @@ module.exports.loginLocal = doAsync( async (req, res, next) => {
   res.send({msg : 'welcome ' + user.username, 
     user: {
       id: user.id,
-      username: user.username
+      username: user.username,
+      level: user.level,
     }
   });
 });
