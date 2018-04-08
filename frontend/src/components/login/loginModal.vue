@@ -72,8 +72,7 @@ export default {
       passwordCheck: '',
     }
   },
-  props: ['activeModal']
-  ,
+  props: ['activeModal'],
   methods: {
     closeModal() {
       this.email = this.username = this.password = this.passwordCheck = '';
