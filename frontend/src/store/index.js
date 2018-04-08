@@ -8,6 +8,7 @@ import auth from './modules/auth';
 import broadcast from './modules/broadcast';
 import chat from './modules/chat';
 import board from './modules/board';
+import admin from './modules/admin';
 
 Vue.use(Vuex);
 
@@ -19,5 +20,6 @@ export default new Vuex.Store({
         broadcast,
         chat,
         board,
+        admin,
     }
 })

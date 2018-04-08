@@ -14,4 +14,6 @@ router.use('/broadcast', require('./broadcast'));
 
 router.use('/board', require('./board'));
 
+router.use('/admin', require('./admin'));
+
 module.exports = router;

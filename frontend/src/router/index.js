@@ -12,6 +12,7 @@ import broadcastList from '@/components/main/BroadcastList'
 import boardList from '@/components/board/BoardList'
 import articlePage from '@/components/board/ArticlePage'
 import articleDetailPage from '@/components/board/ArticleDetailPage'
+import admin from '@/router/admin/admin'
 
 import store from '@/store'
 import {stringToPositive} from '../api/util/utils'
@@ -116,6 +117,7 @@ const router =  new Router({
         return next('/');
       }
     },
+    admin,
     {
       path: '/error',
       name: 'ErrorPage',
