@@ -1,5 +1,5 @@
 import AdminPage from '@/components/AdminPage';
-import AdminApplyList from '@/components/admin/AdminApplyList';
+import AdminApplicationList from '@/components/admin/AdminApplicationList';
 
 export default {
     path: '/admin',
@@ -8,7 +8,7 @@ export default {
     children: [
         {
             path: '',
-            component: AdminApplyList,
+            component: AdminApplicationList,
         }
     ]
 }
