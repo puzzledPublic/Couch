@@ -91,15 +91,21 @@ module.exports.list = doAsync( async (req, res, next) => {
 });
 
 module.exports.apply = doAsync( async (req, res, next) => {
-    const username = req.body.username;
-    const content = req.body.content;
-    const type = req.body.type;
+
+    const {email, username, content, type }  = req.body;
 
     if(!req.user || req.user.username !== username) {
-        return res.status(400).send({msg: 'bad request'});
+        return res.status(400).send({msg: 'bad request. no such user exist'});
     } 
     
+    const user = await models.Application.findOne({where: {email: email}});
+
+    if(!user) {
+        return res.status(400).send({msg: 'bad request. no such user exist'});
+    }
+
     await models.Application.create({
+        email: email,
         username: username, 
         content: content, 
         type: type

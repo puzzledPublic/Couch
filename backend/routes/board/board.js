@@ -7,6 +7,7 @@ const {getPaginationInfo} = require('../../lib/board');
 const {Level} =  require('../../config/levelConfig');
 const {stringToPositive, boardLevelCheck} = require('../../lib/utils');
 const {createDigest} = require('../../lib/hash');
+const {serverURL} = require('../../config/url');
 
 module.exports.enter = doAsync( async (req, res, next) => {
     const boardname = req.params.boardname;
@@ -247,7 +248,7 @@ module.exports.uploadImage = (req, res, next) => {
     if(!image.mimetype.includes('image')) {
        return res.status(400).send({msg: 'only accept image file'});
     }
-    const imageURL = `http://whowant.ml:3000/images/${image.filename}`;
+    const imageURL = `${serverURL}/images/${image.filename}`;
     return res.send({msg: 'image is successfully uploaded', imageURL: imageURL});
 }
 
