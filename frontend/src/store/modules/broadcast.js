@@ -51,6 +51,7 @@ const actions = {
     async sendBroadcastApplicationAction({commit}, {content, configType}) {
         const username = JSON.parse(localStorage.getItem('COUCH_USER')).username;
         const result = await broadcast.sendBroadcastApplication({
+            email: email,
             username: username,
             content: content,
             configType: configType
