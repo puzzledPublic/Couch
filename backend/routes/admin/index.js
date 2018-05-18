@@ -4,4 +4,10 @@ const admin = require('./admin');
 
 router.get('/', admin.main);
 
-module.exports = admin;
+router.get('/applicationlist', admin.applicationList);
+
+router.get('/applicationgrant/:id', admin.applicationGrant);
+
+router.get('/applicationreject/:id', admin.applicationReject);
+
+module.exports = router;

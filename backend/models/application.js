@@ -1,5 +1,6 @@
 module.exports = (sequelize, DataType) => {
     let Application = sequelize.define('Application', {
+        user_id: { type: DataType.INTEGER},
         username: { type: DataType.STRING, allowNull: false},
         content: { type: DataType.TEXT, allowNull: false},
         type: { type: DataType.STRING, allowNull: false},
