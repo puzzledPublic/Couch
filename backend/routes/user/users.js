@@ -75,10 +75,11 @@ module.exports.loginLocal = doAsync( async (req, res, next) => {
   //토큰 생성
   const token = await user.createToken();
   
-  res.cookie('access_token', token, {maxAge: 5 * 60 * 1000, httpOnly: true});
+  res.cookie('access_token', token, {maxAge: 30 * 60 * 1000, httpOnly: true});
   res.send({msg : 'welcome ' + user.username, 
     user: {
       id: user.id,
+      email: user.email,
       username: user.username,
       level: user.level,
     }
