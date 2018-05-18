@@ -64,6 +64,7 @@
 <script>
 import io from 'socket.io-client'
 import {mapMutations} from 'vuex'
+import {chatServerURL} from '../../api/serverURL'
 
 export default {
   name: 'ChatBox',
@@ -131,7 +132,7 @@ export default {
     ]),
     initializeSocket() {
       if(!this.socket){
-        this.socket = io('http://whowant.ml:3000');
+        this.socket = io(chatServerURL);
         this.socket.on('receiveMessage', (chatMsg) => {
           this.addMsg(chatMsg);
         });
