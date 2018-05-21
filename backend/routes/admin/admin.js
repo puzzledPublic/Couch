@@ -16,7 +16,7 @@ module.exports.applicationList = doAsync( async (req, res, next) => {
 });
 
 module.exports.applicationGrant = doAsync( async (req, res, next) => {
-    const { id: applicationId } = req.params;
+    const { applicationId } = req.body;
     const applicationInfo = await models.Application.find({where: {id : applicationId}});
 
     if(applicationInfo && applicationInfo.get('state') === 0) {
@@ -52,11 +52,14 @@ module.exports.applicationGrant = doAsync( async (req, res, next) => {
         }
         return res.send({result: 'success'});
     }
+    else if(applicationInfo.get('state') !== 0) {
+        return res.status(401).send({result: 'already stated'});
+    }
     return res.status(404).send({result: 'application is not exist'});
 });
 
 module.exports.applicationReject = doAsync( async (req, res, next) => {
-    const { id: applicationId } = req.params;
+    const { applicationId } = req.body;
     const applicationInfo = await models.Application.find({where: {id : applicationId}});
     if(applicationInfo && applicationInfo.get('state') === 0) {
         await models.Application.update({state: 2 }, {where: {id: applicationId}});

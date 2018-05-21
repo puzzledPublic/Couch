@@ -4,8 +4,9 @@
         <td>{{username}}</td>
         <td>{{type}}</td>
         <td>{{state}}</td>
+        <td>{{time}}</td>
         <td><a class="button is-small is-info" @click="grantApplicationAction(applicationId)">grant</a></td>
-        <td><a class="button is-small is-danger">reject</a></td>
+        <td><a class="button is-small is-danger" @click="rejectApplicationAction(applicationId)">reject</a></td>
     </tr>
 </template>
 
@@ -17,7 +18,15 @@ export default {
     content: {type: String},
     type: {type: String},
     state: {type: String},
+    createdAt: {type: String},
     grantApplicationAction: {type: Function},
+    rejectApplicationAction: {type: Function}
+  },
+  computed: {
+    time() {
+      const time = new Date(this.createdAt);
+      return time.toLocaleString();
+    }
   }
 }
 </script>

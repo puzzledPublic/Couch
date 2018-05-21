@@ -2,12 +2,15 @@ const express = require('express');
 const router = express.Router();
 const admin = require('./admin');
 
+//get
 router.get('/', admin.main);
 
-router.get('/applicationlist', admin.applicationList);
+router.get('/application/list', admin.applicationList);
 
-router.get('/applicationgrant/:id', admin.applicationGrant);
+//post
+router.post('/application/grant', admin.applicationGrant);
 
-router.get('/applicationreject/:id', admin.applicationReject);
+//put
+router.put('/application/reject', admin.applicationReject);
 
 module.exports = router;

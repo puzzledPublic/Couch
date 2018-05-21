@@ -24,7 +24,10 @@ const actions = {
         }
     },
     async rejectApplicationAction({commit}, applicationId) {
-
+        const result = await admin.rejectApplication(applicationId);
+        if(result.status === 200) {
+            //
+        }
     }
 }
 

@@ -32,9 +32,9 @@
                         <button class="login button is-link" v-if="!isLogined" @click="openLoginModal" >Sign Up/ Sign In</button>   
                     </p>     
                     <div class="logined navbar-item has-dropdown is-hoverable" v-if="isLogined">
-                        <span class="navbar-link">{{username}} 님</span>
+                        <span class="navbar-link">{{userInfo.username}} 님</span>
                         <div class="dropdown-content navbar-dropdown is-boxed is-right">
-                            <router-link class="navbar-item" v-if="userLevel === 5" :to="'/admin'">관리자 설정</router-link> 
+                            <router-link class="navbar-item" v-if="userInfo.level === 5" :to="'/admin'">관리자 설정</router-link> 
                             <a href="#" class="broadcastConfig navbar-item" @click="broadcastConfig">설정하기</a>
                             <a href="#" class="logout navbar-item" @click="logout">로그아웃</a>
                         </div>
@@ -54,13 +54,13 @@ export default {
     data() {
         return{
             active: 'home',
-            username: '',
         }
     },
     created() {
         const user = window.localStorage.getItem('COUCH_USER');
         if(user){
-            this.username = JSON.parse(user).username;
+            const userInfo = JSON.parse(user);
+            this.setUserInfo(userInfo);
             this.setLoginFlag(true);
         }
     },
@@ -74,8 +74,8 @@ export default {
         loginModal() {
             return this.$store.state.auth.loginModal;
         },
-        userLevel() {
-            return this.$store.state.auth.userInfo.level;
+        userInfo() {
+            return this.$store.state.auth.userInfo;
         }
     },
     // Functions we will be using.
@@ -83,6 +83,7 @@ export default {
         ...mapMutations([
             'setLoginFlag',
             'setLoginModal',
+            'setUserInfo'
         ]),
         ...mapActions({
             logoutAction: 'logoutAction'

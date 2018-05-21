@@ -87,8 +87,7 @@ $RECYCLE.BIN/
 #config files
 config/dbConfig.json
 config/jwtConfig.json
+package-lock.json
 
 #images, script, css
 public/
-
-package-lock.json
