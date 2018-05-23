@@ -16,7 +16,7 @@
                     </p>
                     <ul class="menu-list">
                         <li @click="refreshBoardView"><router-link :to="'/board/free'">자유 게시판</router-link></li>
-                        <li><a>PD 게시판</a></li>
+                        <li><router-link :to="'/board/list'"> PD 게시판</router-link></li>
                     </ul>
                 </aside>
             </div>
@@ -33,7 +33,7 @@
                 </div>
             </div>
             <div class="column is-10 broadcast-list">
-                <!--<Broadcast-List></Broadcast-List>-->
+                <!-- :key is for reloading diffrent path but same component, another way is using router's beforeRouteUpdate methods -->
                 <router-view></router-view>
             </div>
         </div>  

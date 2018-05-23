@@ -31,7 +31,7 @@ const router =  new Router({
           path: '', component: broadcastList
         },
         {
-          path: 'board', component: boardList
+          path: 'board/list', component: boardList
         },
         {
           path: 'board/:boardname', component: articlePage

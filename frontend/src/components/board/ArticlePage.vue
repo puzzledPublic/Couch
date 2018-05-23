@@ -1,28 +1,29 @@
 <template>
 <div class="article-wrap">
-    <div class="board-name-wrap">
-        <h3 class="title is-3 board-name">Free</h3>
-        <div class="bottom-divider"></div>
-    </div>
+    <Banner-Component :banner="bannerName"/>
     <component :is="currentArticlePageViewName"></component>
 </div>
 </template>
 
 <script>
-import ArticleList from '@/components/board/ArticleList'
-import ArticleEditor from '@/components/board/ArticleEditor'
-
-import {mapMutations} from 'vuex'
+import ArticleList from '@/components/board/ArticleList';
+import ArticleEditor from '@/components/board/ArticleEditor';
+import BannerComponent from '@/components/board/BannerComponent';
+import {mapMutations, mapActions} from 'vuex';
 
 export default {
     computed: {
         currentArticlePageViewName() {
             return this.$store.state.board.currentViewName.articlePage;
+        },
+        bannerName() {
+            return this.$route.params.boardname;
         }
     },
     components: {
         'Article-List': ArticleList,
         'Article-Editor': ArticleEditor,
+        BannerComponent,
     },
     created() {
         const boardname = this.$route.params.boardname;
@@ -32,9 +33,19 @@ export default {
     methods: {
         ...mapMutations([
             'setBoardname',
-            'setArticlePageViewName'
+            'setArticlePageViewName',
+        ]),
+        ...mapActions([
+            'getArticleListAction'
         ])
+    },
+    beforeRouteUpdate(to, from, next) {
+        const boardname = to.params.boardname;
+        this.setBoardname(boardname);
+        this.getArticleListAction({boardname});
+        next();
     }
+    
 }
 </script>
 

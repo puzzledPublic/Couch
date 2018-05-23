@@ -6,6 +6,8 @@ const upload = require('../../lib/middleware/upload');
 /* GET */
 router.get('/info', board.getInfo);
 
+router.get('/list', board.getBoardList);
+
 router.get('/:boardname', board.enter);
 
 router.get('/:boardname/p/:pageNum', board.enter);

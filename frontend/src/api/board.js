@@ -72,3 +72,7 @@ export const setBoardConfig = doAsync(({readLevel, writeLevel, commentLevel}) =>
 export const getBoardConfig = doAsync(() => {
     return axios.get(`${serverURL}:3000/board/info`, {withCredentials: true});
 });
+
+export const getBoardList = doAsync(() => {
+    return axios.get(`${serverURL}:3000/board/list`, {withCredentials: true});
+});

@@ -20,8 +20,8 @@ const state = {
     guestArticle: {
         mode: null,
         passwordForValidate: null
-    }
-    
+    },
+    boardList: []
 }
 
 const getters = {
@@ -128,7 +128,7 @@ const actions = {
     },
     async setBoardConfigAction({state}, config) {
         const result = await board.setBoardConfig(config);
-        if(result === 200) {
+        if(result.status === 200) {
             return true;
         }
         return false;
@@ -145,6 +145,12 @@ const actions = {
             return boardInfo;
         }
         return null;
+    },
+    async getBoardListAction({commit}) {
+        const result = await board.getBoardList();
+        if(result.status === 200) {
+            commit('setBoardList', result.data);
+        }
     }
 }
 
@@ -192,6 +198,9 @@ const mutations = {
     },
     setGuestArticlePasswordForValidate(state, password) {
         state.guestArticle.passwordForValidate = password;
+    },
+    setBoardList(state, boardList) {
+        state.boardList = boardList;
     }
 }
 

@@ -4,7 +4,7 @@
         <a class="pagination-next" @click="writeArticle" v-if="accessAuth.write">글 쓰기</a>
         <ul class="pagination-list">
             <li v-for="n in paginationInfo.endPageNum" :key="n">
-                <a class="pagination-link" :class="currentPage === n + paginationInfo.startPageNum - 1 ? 'is-current' : ''" @click="changePage(n + paginationInfo.startPageNum - 1)"aria-label="Page 1" aria-current="page">{{n + paginationInfo.startPageNum - 1}}</a>
+                <a class="pagination-link" :class="currentPage === n + paginationInfo.startPageNum - 1 ? 'is-current' : ''" @click="changePage(n + paginationInfo.startPageNum - 1)" aria-label="Page 1" aria-current="page">{{n + paginationInfo.startPageNum - 1}}</a>
             </li>
         </ul>
     </nav>

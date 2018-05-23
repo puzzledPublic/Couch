@@ -293,7 +293,7 @@ module.exports.writeComment = doAsync( async (req, res, next) => {
         comment.email = userInfo.email;
     }else {
         comment.username = req.body.username;
-        comment.password = createDigest(req.body.password);   //TODO:: need to hash the password..
+        comment.password = createDigest(req.body.password);   
     }
     comment.content = req.body.content;
     comment.article_id = articleId;
@@ -371,4 +371,10 @@ module.exports.getInfo = doAsync( async (req, res, next) => {
     }
 
     res.send({msg: 'success', info: board});
+});
+
+module.exports.getBoardList = doAsync( async (req, res, next) => {
+    
+    const boardList = await models.Board.findAll({where: {owner_level: {[Op.not]: Level.ADMIN}}});
+    return res.send(boardList);
 });
